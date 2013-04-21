@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>本体搜索</title>
+		<!--library-->
+		<script src="../lib/jquery-1.8.1.min.js"></script>
+		<script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+		<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<!--custom library-->
+		<script src="../lib/index.js"></script>
+		<link href="../lib/index.css" rel="stylesheet">
+		<!--application-->
+		<script src="ontologysearch.js"></script>
+	</head>
+	<body>
+		<div class="navbar">
+			<div class="navbar-inner navbar-fixed-top">
+				<a class="brand" href="../entitysearch/index.html">TCM-BIO平台</a>
+				<ul class="nav">
+					<li class="active"><a href="index.html">本体搜索</a></li>
+					<li><a href="../termsearch/index.html">术语搜索</a></li>
+					<li><a href="../mappingsearch/index.html">中西医映射搜索</a></li>
+				</ul>
+				<ul class="nav pull-right">
+					<li><a href="index.html"><i class="icon-black icon-question-sign"></i>帮助</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="page-header">
+			<div class="row-fluid">
+				<div class="span2">
+					<h2>本体搜索</h2>
+				</div>
+				<div class="span4" style="margin-top:30px; margin-left:-30px">
+					<p>中医药领域本体库查询</p>
+				</div>
+			</div>
+		</div>
+		<div class="well well-large" style="margin: 0px 60px 30px 60px;">
+		<div class="span3 offset8">
+			<div class="form-search">
+				<input type="text" class="input-medium search-query" id="keyword">
+				<button class="btn" id="onto-search">Search</button>
+			</div>
+		</div>
+		<div style="margin: 0px 80px 30px 80px;">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>本体名称</th>
+						<th>条目数目</th>
+						<th>更新时间</th>
+						<th>描述</th>
+					</tr>
+				</thead>
+				<tbody id="ontologies-detail">
+				</tbody>
+			</table>
+		</div>
+		</div>
+	</body>
+</html>

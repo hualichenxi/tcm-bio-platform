@@ -9,7 +9,7 @@
   <url>http://maven.apache.org</url>
   
   <properties>
-	  <spring.version>3.0.5.RELEASE</spring.version>
+	  <spring.version>3.1.4.RELEASE</spring.version>
 	  <junit.version>4.11</junit.version>
 	  <jdk.version>1.7</jdk.version>
   </properties>
@@ -29,6 +29,12 @@
 		<artifactId>spring-core</artifactId>
 		<version>${spring.version}</version>
 	</dependency>
+	
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-jdbc</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
  
 	<dependency>
 		<groupId>org.springframework</groupId>
@@ -41,7 +47,22 @@
 		<artifactId>spring-webmvc</artifactId>
 		<version>${spring.version}</version>
 	</dependency>
-  </dependencies>
+	
+	<dependency>
+		<groupId>org.codehaus.jackson</groupId>
+		<artifactId>jackson-mapper-asl</artifactId>
+		<version>1.7.1</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>virtjdbc4</groupId>
+		<artifactId>virtjdbc4</artifactId>
+		<version>1.0.0</version>
+		<scope>system</scope>
+		<systemPath>/home/tonghao/download/virtjdbc4.jar</systemPath>
+	</dependency>
+	
+  </dependencies>  
   
   <build>
     <finalName>tcm-bio-platform</finalName>
