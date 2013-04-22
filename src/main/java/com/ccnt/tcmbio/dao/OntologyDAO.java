@@ -14,6 +14,8 @@ public interface OntologyDAO {
 
     public ArrayList<OntologyData> findAllOntologies();
 
-    public ArrayList<OntologyData> searchOntology(final String keyword);
+    public ArrayList<OntologyData> findAllOntologiesv1_0();
+
+    public ArrayList<OntologyData> searchOntologies(final String keyword);
 
 }

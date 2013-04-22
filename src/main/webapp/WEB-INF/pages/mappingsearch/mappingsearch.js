@@ -15,7 +15,7 @@ var mappingsearch = {
 	
 	urlGetAll = "../v0.9/mapping",
 	urlSearch = "../v0.9/mapping/ks/",
-	urlGetDetail = "../v0.9/mapping/fs/";
+	urlGetDetail = "../v0.9/mapping/ds/";
 	
 	getAllMapping : function() {
 		

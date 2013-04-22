@@ -14,4 +14,6 @@ public interface OntologyService {
 
     public ArrayList<OntologyData> getAllOntologies();
 
+    public ArrayList<OntologyData> searchOntologies(String keyword);
+
 }

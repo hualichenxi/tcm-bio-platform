@@ -8,14 +8,36 @@
 // ================= INIT FUNCTIONS ============================================
 
 $(function(){
-	ontologysearch.getAllOntologies();
+	var url = $.url();
+	var keyword = url.param("kw");
+	
+	if (keyword) {
+		$('#keyword').val(keyword);
+		ontologysearch.searchOntology(keyword);
+	} else {
+		ontologysearch.getAllOntologies();
+	}
+	
 	$('#onto-search').live('click', function(){
 		var keyword = $('#keyword').val();
-		ontologysearch.searchOntology(keyword);
+		
+		// remote search version
+		// window.open("index.html?kw=" + keyword, "_self");
+		
+		// local search version
+		ontologysearch.localSearchOntology(keyword);
 	});
 });
 
 // ================= UTILITY FUNCTIONS =========================================
+
+//override jquery's contains function to case insensitive
+$.expr[":"].contains = $.expr.createPseudo(function (arg) {                                                                                                                                                                
+    return function (elem) {                                                            
+        return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;        
+    };                                                                                  
+});
+
 var ontologysearch = {
 	
 	urlGetAll : "../v0.9/ontologies",
@@ -27,6 +49,15 @@ var ontologysearch = {
 	
 	searchOntology : function(keyword) {
 		commonjs.ajax("GET", this.urlSearch + keyword, "", "", this.displayOnto, commonjs.showErrorTip);	
+	},
+	
+	localSearchOntology : function(keyword) {
+		$('#ontologies-detail tr').hide();
+		if(keyword) {
+			$('#ontologies-detail td:contains('+ keyword +')').parent().show();
+		} else {
+			$('#ontologies-detail tr').show();
+		}
 	},
 	
 	// GET success call-back functions

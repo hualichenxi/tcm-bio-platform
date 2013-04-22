@@ -27,7 +27,7 @@ public class OntologyDAOImpl extends JdbcDaoSupport implements OntologyDAO{
 
     @Override
     public ArrayList<OntologyData> findAllOntologies() {
-        final String getAllGraphSparql = "SPARQL SELECT DISTINCT ?g as ?name WHERE { GRAPH ?g {?s ?p ?o} }";
+        final String getAllGraphSparql = "SPARQL SELECT distinct ?g as ?name WHERE { GRAPH ?g {?s ?p ?o} }";
         final ArrayList<OntologyData> ontologies = new ArrayList<OntologyData>();
 
         try {
@@ -49,6 +49,7 @@ public class OntologyDAOImpl extends JdbcDaoSupport implements OntologyDAO{
                 } else {
                     ontology.setItemnum(0);
                 }
+
                 ontology.setDescription("no description");
                 ontologies.add(ontology);
             }
@@ -63,7 +64,67 @@ public class OntologyDAOImpl extends JdbcDaoSupport implements OntologyDAO{
     }
 
     @Override
-    public ArrayList<OntologyData> searchOntology(final String keyword){
+    public ArrayList<OntologyData> findAllOntologiesv1_0() {
+        final String getAllGraphSparql = "SPARQL SELECT ?g as ?name (count(*) as ?count) WHERE { GRAPH ?g {?s ?p ?o} } group by ?g";
+        final ArrayList<OntologyData> ontologies = new ArrayList<OntologyData>();
+
+        try {
+
+            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(getAllGraphSparql);
+
+            for (final Map<String, Object> row : rows) {
+                final OntologyData ontology = new OntologyData();
+
+                final String nameString = row.get("name").toString();
+                ontology.setName(nameString);
+
+                final Integer itemnum = Integer.parseInt((row.get("count")).toString());
+                ontology.setItemnum(itemnum);
+
+                ontology.setDescription("no description");
+
+                ontologies.add(ontology);
+            }
+
+            return ontologies;
+
+        } catch (final Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<OntologyData> searchOntologies(final String keyword){
+        final String searchOntologiesSparql = "SPARQL SELECT ?g as ?name (count(*) as ?count) WHERE { GRAPH ?g {?s ?p ?o} . filter regex(?g, \""
+                                                            + keyword +"\", \"i\")}";
+        final ArrayList<OntologyData> ontologies = new ArrayList<OntologyData>();
+
+        try {
+
+            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(searchOntologiesSparql);
+
+            for (final Map<String, Object> row : rows) {
+                final OntologyData ontology = new OntologyData();
+
+                final String nameString = row.get("name").toString();
+                ontology.setName(nameString);
+
+                final Integer itemnum = Integer.parseInt((row.get("count")).toString());
+                ontology.setItemnum(itemnum);
+
+                ontology.setDescription("no description");
+
+                ontologies.add(ontology);
+            }
+
+            return ontologies;
+
+        } catch (final Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
         return null;
     }
 

@@ -10,15 +10,12 @@ import java.util.ArrayList;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ccnt.tcmbio.dao.OntologyDAO;
 import com.ccnt.tcmbio.data.OntologyData;
 import com.ccnt.tcmbio.service.OntologyService;
 
@@ -52,9 +49,7 @@ public class OntologyController {
     public @ResponseBody String searchOntology(@PathVariable final String keyword) throws Exception{
 
         try {
-            final ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-dao.xml");
-            final OntologyDAO ontologyDAO = (OntologyDAO)context.getBean("ontologyDAO");
-            final ArrayList<OntologyData> ontologies = ontologyDAO.searchOntology(keyword);
+            final ArrayList<OntologyData> ontologies = ontologyService.searchOntologies(keyword);
             final ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writeValueAsString(ontologies);
         } catch (final Exception e) {

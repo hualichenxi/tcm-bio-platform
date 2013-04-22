@@ -25,4 +25,9 @@ public class OntologyServiceImpl implements OntologyService{
         return ontologyDAO.findAllOntologies();
     }
 
+    @Override
+    public ArrayList<OntologyData> searchOntologies(final String keyword){
+        return ontologyDAO.searchOntologies(keyword);
+    }
+
 }
