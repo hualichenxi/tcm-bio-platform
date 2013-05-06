@@ -15,7 +15,7 @@ var commonjs = {
 		$.ajax({
 			type : type,
 			url : url,
-			data : type == "GET" ? data : jsonToString(data),
+			data : type == "GET" ? data : commonjs.JsonToStr(data),
 			contentType : contentType,
 			statusCode : {
 				400 : function() {

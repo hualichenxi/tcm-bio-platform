@@ -12,4 +12,10 @@
         <bean id="ontologyService" class="com.ccnt.tcmbio.service.impl.OntologyServiceImpl">
         	<property name="ontologyDAO" ref="ontologyDAO" />
         </bean>
+        
+        <bean id="mappingService" class="com.ccnt.tcmbio.service.impl.MappingServiceImpl">
+        	<property name="mappingDAO" ref="mappingDAO" />
+        	<property name="ontologyDAO" ref="ontologyDAO" />
+        </bean>
+        
 </beans>

@@ -9,6 +9,9 @@
 		<script src="../lib/bootstrap/js/bootstrap.min.js"></script>
 		<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="../lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<!--custom library-->
+		<script src="../lib/index.js"></script>
+		<link href="../lib/index.css" rel="stylesheet">
 		<!--application-->
 		<script src="mappingsearch.js"></script>
 		<link href="../lib/index.css" rel="stylesheet">
@@ -37,55 +40,61 @@
 				</div>
 			</div>
 		</div>
-		<div class="container-fluid">
-			
-		<div class="accordion" id="accordion2">
-			<div class="accordion-group">
-		    	<div class="accordion-heading">
-			     	<div class="accordion-toggle">
-			        	Collapsible Group Item #2
-			      	</div>
-		    	</div>
-		    </div>
-		  	<div class="accordion-group">
-		    	<div class="accordion-heading">
-		    	  	<!-- <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-		    		    Collapsible Group Item #1
-		    	  	</a> -->
-		    	  	<div class="accordion-toggle row-fluid">
-		    	  		<div class="span5">
-		    	  			xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-		    	  		</div>
-		    	  		<div class="span5">
-		    	  			123
-		    	  		</div>
-		    	  		<div class="span1 offset1">
-		    	  			<button class="btn btn-info" data-toggle="collapse" data-target="#collapseOne">
-		    	  				<i class="icon-chevron-up icon-white"></i>
-		    	  			</button>
-		    	  		</div>
-		    	  	</div>
-		    	</div>
-			    <div id="collapseOne" class="accordion-body collapse in">
-			      	<div class="accordion-inner">
-			        	Anim pariatur cliche...
-		    	  	</div>
+		<div class="container-fluid span11 offset1">
+			<div class="accordion" id="mappingtable">
+				<div class="accordion-group" style="background-color: #bfbfbf">
+			    	<div class="accordion-heading">
+				     	<div class="accordion-toggle row-fluid">
+					     	<div class="span5">
+					     		本体名称
+					     	</div>
+					      	<div class="span4">
+					      		有映射关系的本体数目
+					      	</div>
+					      	<div class="span2">
+					      		<button class="btn btn-info" id="sync-btn">
+					      			<i class="icon-repeat icon-white"></i>更新映射关系
+					      		</button>
+					      	</div>
+				      	</div>
+			    	</div>
 			    </div>
+			  	<div class="accordion-group hide" id="sample-mapping">
+			    	<div class="accordion-heading">
+			    	  	<div class="accordion-toggle row-fluid">
+			    	  		<div class="span5 graph-name">
+			    	  			xx
+			    	  		</div>
+			    	  		<div class="span5 total-num">
+			    	  			123
+			    	  		</div>
+			    	  		<div class="span2">
+			    	  			<button class="btn btn-link mapping-detail-btn" data-toggle="collapse" data-target="#collapse0">
+			    	  				<i class="icon-chevron-up icon-black"></i>详细
+			    	  			</button>
+			    	  		</div>
+			    	  	</div>
+			    	</div>
+				    <div id="collapse0" class="accordion-body collapse">
+				      	<div class="accordion-inner" style="background-color: #eeeeee; margin: 0px 15px 10px 15px">
+				        	<table class="table table-striped">
+				        		<thead>
+				        			<tr>
+					        			<th>存在映射关系的本体</th>
+					        			<th>映射数目</th>
+				        			</tr>
+				        		</thead>
+				        		<tbody class="sub-mapping-graphs">
+				        			<tr class="hide sample-mapping-graph">
+				        				<td class="sub-graph-name">xx</td>
+				        				<td class="sub-total-num">yy</td>
+				        			</tr>
+				        		</tbody>
+				        	</table>
+			    	  	</div>
+				    </div>
+				</div>
 			</div>
-			<div class="accordion-group">
-		    	<div class="accordion-heading">
-			      	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-			        	Collapsible Group Item #2
-			      	</a>
-		    	</div>
-			    <div id="collapseTwo" class="accordion-body collapse">
-			      	<div class="accordion-inner">
-			        	Anim pariatur cliche...
-		    	  	</div>
-		   	 	</div>
-		  	</div>
-		</div>
-		
 		</div>
 	</body>
 </html>

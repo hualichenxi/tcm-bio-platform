@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.ccnt.tcmbio.dao.OntologyDAO;
@@ -25,14 +27,50 @@ public class OntologyDAOImpl extends JdbcDaoSupport implements OntologyDAO{
 //        this.dataSource = dataSource;
 //    }
 
+    private static final Logger LOGGER = LogManager.getLogger(OntologyDAOImpl.class.getName());
+
     @Override
-    public ArrayList<OntologyData> findAllOntologies() {
-        final String getAllGraphSparql = "SPARQL SELECT distinct ?g as ?name WHERE { GRAPH ?g {?s ?p ?o} }";
+    public ArrayList<OntologyData> findAllGraphs(){
+        final String sparql = "SPARQL SELECT distinct ?g as ?name WHERE { GRAPH ?g {?s ?p ?o} }";
         final ArrayList<OntologyData> ontologies = new ArrayList<OntologyData>();
+
+        LOGGER.debug("findAllGraphs - query virtuoso: {}", sparql);
 
         try {
 
-            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(getAllGraphSparql);
+            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sparql);
+
+            for (final Map<String, Object> row : rows) {
+                final OntologyData ontology = new OntologyData();
+
+                final String nameString = row.get("name").toString();
+                ontology.setName(nameString);
+                ontology.setItemnum(0);
+                ontology.setDescription("no description");
+
+                ontologies.add(ontology);
+            }
+
+            return ontologies;
+
+        } catch (final Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public ArrayList<OntologyData> findAllOntologies() {
+        final String sparql = "SPARQL SELECT distinct ?g as ?name WHERE { GRAPH ?g {?s ?p ?o} }";
+        final ArrayList<OntologyData> ontologies = new ArrayList<OntologyData>();
+
+        LOGGER.debug("findAllOntologies - query virtuoso: {}", sparql);
+
+        try {
+
+            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sparql);
 
             for (final Map<String, Object> row : rows) {
                 final OntologyData ontology = new OntologyData();
@@ -65,12 +103,14 @@ public class OntologyDAOImpl extends JdbcDaoSupport implements OntologyDAO{
 
     @Override
     public ArrayList<OntologyData> findAllOntologiesv1_0() {
-        final String getAllGraphSparql = "SPARQL SELECT ?g as ?name (count(*) as ?count) WHERE { GRAPH ?g {?s ?p ?o} } group by ?g";
+        final String sparql = "SPARQL SELECT ?g as ?name (count(*) as ?count) WHERE { GRAPH ?g {?s ?p ?o} } group by ?g";
         final ArrayList<OntologyData> ontologies = new ArrayList<OntologyData>();
+
+        LOGGER.debug("findAllOntologiesv1_0 - query virtuoso: {}", sparql);
 
         try {
 
-            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(getAllGraphSparql);
+            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sparql);
 
             for (final Map<String, Object> row : rows) {
                 final OntologyData ontology = new OntologyData();
@@ -97,13 +137,15 @@ public class OntologyDAOImpl extends JdbcDaoSupport implements OntologyDAO{
 
     @Override
     public ArrayList<OntologyData> searchOntologies(final String keyword){
-        final String searchOntologiesSparql = "SPARQL SELECT ?g as ?name (count(*) as ?count) WHERE { GRAPH ?g {?s ?p ?o} . filter regex(?g, \""
+        final String sparql = "SPARQL SELECT ?g as ?name (count(*) as ?count) WHERE { GRAPH ?g {?s ?p ?o} . filter regex(?g, \""
                                                             + keyword +"\", \"i\")}";
         final ArrayList<OntologyData> ontologies = new ArrayList<OntologyData>();
 
+        LOGGER.debug("searchOntologies - query virtuoso: {}", sparql);
+
         try {
 
-            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(searchOntologiesSparql);
+            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sparql);
 
             for (final Map<String, Object> row : rows) {
                 final OntologyData ontology = new OntologyData();

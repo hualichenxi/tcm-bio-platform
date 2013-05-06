@@ -8,6 +8,8 @@ package com.ccnt.tcmbio.controller;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,8 @@ import com.ccnt.tcmbio.service.OntologyService;
 @RequestMapping("/")
 public class OntologyController {
 
+    private static final Logger LOGGER = LogManager.getLogger(OntologyController.class.getName());
+
     @Autowired
     private OntologyService ontologyService;
 
@@ -32,6 +36,8 @@ public class OntologyController {
 
     @RequestMapping(value = "/v0.9/ontologies", method = RequestMethod.GET)
     public @ResponseBody String getAllOntologies() throws Exception{
+
+        LOGGER.debug("Reveived GET request: /v0.9/ontologies");
 
         try {
 //            final OntologyDAO ontologyDAO = (OntologyDAO)context.getBean("ontologyDAO");
@@ -47,6 +53,8 @@ public class OntologyController {
 
     @RequestMapping(value = "/v0.9/ontologies/{keyword}", method = RequestMethod.GET)
     public @ResponseBody String searchOntology(@PathVariable final String keyword) throws Exception{
+
+        LOGGER.debug("Reveived GET request: /v0.9/ontologies/{keyword}");
 
         try {
             final ArrayList<OntologyData> ontologies = ontologyService.searchOntologies(keyword);

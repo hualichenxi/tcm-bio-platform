@@ -12,4 +12,9 @@
         <bean id="ontologyController" class="com.ccnt.tcmbio.controller.OntologyController">
         	<property name="ontologyService" ref="ontologyService" />
         </bean>
+        
+        <bean id="mappingController" class="com.ccnt.tcmbio.controller.MappingController">
+        	<property name="mappingService" ref="mappingService" />
+        </bean>
+        
 </beans>

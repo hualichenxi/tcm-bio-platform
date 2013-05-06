@@ -22,4 +22,8 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
+	<bean id="mappingDAO" class="com.ccnt.tcmbio.dao.impl.MappingDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
 </beans>
