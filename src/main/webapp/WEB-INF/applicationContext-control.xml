@@ -17,4 +17,8 @@
         	<property name="mappingService" ref="mappingService" />
         </bean>
         
+        <bean id="tcmInferController" class="com.ccnt.tcmbio.controller.TcmInferController">
+        	<property name="tcmInferService" ref="tcmInferService" />
+        </bean>
+        
 </beans>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>实体搜索</title>
+		<!--library-->
+		<script src="../lib/jquery-1.8.1.min.js"></script>
+		<script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+		<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<!--custom library-->
+		<script src="../lib/index.js"></script>
+		<script src="../lib/purl.js"></script>
+		<script src="../lib/jquery.simplePagination.js"></script>
+		<!--application-->
+		<script src="tcminfer.js"></script>
+		<link href="../lib/index.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="navbar">
+			<div class="navbar-inner navbar-fixed-top">
+				<a class="brand" href="#">TCM-BIO平台</a>
+				<ul class="nav">
+					<li><a href="../ontologysearch/index.html">本体搜索</a></li>
+					<li><a href="../termsearch/index.html">术语搜索</a></li>
+					<li><a href="../mappingsearch/index.html">中西医映射搜索</a></li>
+					<li class="active"><a href="../tcminference/index.html">TCM推理搜索</a></li>
+				</ul>
+				<ul class="nav pull-right">
+					<li><a href="index.html"><i class="icon-black icon-question-sign"></i>帮助</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="page-header">
+			<div class="row-fluid">
+				<div class="span3">
+					<h2>TCM推理搜索</h2>
+				</div>
+				<div class="span5" style="margin-top:30px; margin-left:-30px">
+					<p>基于中药的蛋白质，基因，疾病等推理结果的搜索</p>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label">中药</label>
+					<div class="controls">
+						<input type="text" id="tcm-keyword" placeholder="Ginkgo biloba, Curcuma longa..." value="Ginkgo biloba"/>
+						<button class="btn" id="tcm-search">搜索</button>
+						<span class="help-inline" id="total-or-fuzzytip">
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="well offset1 span11" style="min-height: 500px">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#tab1" data-toggle="tab">列表</a>
+				</li>
+				<li>
+					<a href="#tab2" data-toggle="tab">详细列表</a>
+				</li>
+				<li>
+					<a href="#tab3" data-toggle="tab">图表</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab1">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Tcm Name</th>
+								<th>Disease Name</th>
+								<th>Disease ID</th>
+								<th>Drug ID</th>
+								<th>Target ID</th>
+								<th>Protein Accession</th>
+								<th>Gene ID</th>
+								<th>Gene Product</th>
+							</tr>
+						</thead>
+						<tbody id="tab1-table">
+							<tr class="hide" id="tab1-table-sample-row">
+								<td class="tcm-name">x</td>
+								<td class="disease-name">x</td>
+								<td class="disease-ID">x</td>
+								<td class="drud-ID">x</td>
+								<td class="target-ID">x</td>
+								<td class="protein-acce">x</td>
+								<td class="gene-ID">x</td>
+								<td class="gene-prod">x</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagination">
+					</div>
+				</div>
+				<div class="tab-pane" id="tab2">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Tcm Name</th>
+								<th>Disease Name</th>
+								<th>Disease ID</th>
+								<th>Drug ID</th>
+								<th>Target ID</th>
+								<th>Protein Accession</th>
+								<th>Gene ID</th>
+								<th>Gene Product</th>
+							</tr>
+						</thead>
+						<tbody id="tab2-table">
+							<tr class="hide" id="tab2-table-sample-row">
+								<td class="tcm-name">x</td>
+								<td class="disease-name">x</td>
+								<td class="disease-ID">x</td>
+								<td class="drud-ID">x</td>
+								<td class="target-ID">x</td>
+								<td class="protein-acce">x</td>
+								<td class="gene-ID">x</td>
+								<td class="gene-prod">x</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagination">
+					</div>
+				</div>
+				<div class="tab-pane" id="tab3">
+					<p>haha</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

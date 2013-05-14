@@ -19,11 +19,14 @@
 	<mvc:resources mapping="/mappingsearch/*.js" location="/WEB-INF/pages/mappingsearch/"/>
 	<mvc:resources mapping="/ontologysearch/*.js" location="/WEB-INF/pages/ontologysearch/"/>
 	<mvc:resources mapping="/termsearch/*.js" location="/WEB-INF/pages/termsearch/"/>
+	<mvc:resources mapping="/tcminference/*.js" location="/WEB-INF/pages/tcminference/"/>
+	
 	<mvc:resources mapping="/entitysearch/*.html" location="/WEB-INF/pages/entitysearch/"/>
 	<mvc:resources mapping="/indexpage/*.html" location="/WEB-INF/pages/indexpage/"/>
 	<mvc:resources mapping="/mappingsearch/*.html" location="/WEB-INF/pages/mappingsearch/"/>
 	<mvc:resources mapping="/ontologysearch/*.html" location="/WEB-INF/pages/ontologysearch/"/>
 	<mvc:resources mapping="/termsearch/*.html" location="/WEB-INF/pages/termsearch/"/>
+	<mvc:resources mapping="/tcminference/*.html" location="/WEB-INF/pages/tcminference/"/>
 	<mvc:resources mapping="/lib/**" location="/WEB-INF/pages/lib/"/>
 	
 	<bean

@@ -11,7 +11,13 @@ $(function(){
 	mappingsearch.getAllMapping();
 	
 	$('#sync-btn').live('click', function(){
+		mappingsearch.getSyncProgress();
+	});
 	
+	$('#sync-btn').live('hover', function(){
+		if ($('#sync-btn').attr("disabled") == "disabled"){
+			mappingsearch.getSyncProcessCallBack();
+		}
 	});
 		
 	$(".mapping-detail-btn").live("click", function(){
@@ -39,10 +45,19 @@ $(function(){
 var mappingsearch = {
 	
 	urlSync : "../v0.9/mappingsync",
+	urlGetSyncProcess: "../v0.9/getsyncprogress",
 	urlGetAll : "../v0.9/mapping",
 	urlSearch : "../v0.9/mapping/ks/",
 	urlGetDetail : "../v0.9/mapping/ds/",
-	currentOpen : "",
+	currentOpen : "",// make the open callpase tab
+	
+	syncMapping: function(){
+		commonjs.ajax("GET", this.urlSync, "", "", this.syncMappingCallBack, commonjs.showErrorTip);
+	},
+	
+	getSyncProgress: function(){
+		commonjs.ajax("GET", this.urlGetSyncProcess, "", "", this.getSyncProcessCallBack, commonjs.showErrorTip);
+	},
 	
 	getAllMapping : function() {
 		commonjs.ajax("GET", this.urlGetAll, "", "", this.displayMapping, commonjs.showErrorTip);
@@ -54,6 +69,22 @@ var mappingsearch = {
 	
 	getDetailMapping : function(graphNameJson) {
 		commonjs.ajax("POST", this.urlGetDetail, graphNameJson, "", this.displayDetail, commonjs.showErrorTip);
+	},
+	
+	syncMappingCallBack : function(data, textStatus, jqXHR){
+		data = commonjs.strToJson(data);
+		// todo
+	},
+	
+	getSyncProcessCallBack : function(data, textStatus, jqXHR){
+		data = commonjs.strToJson(data);
+		if(data.status == 1){
+			$('#sync-btn').attr("disabled","disabled");
+			showSyncProgressTip(data);
+		} else if(data.status == 0){
+			mappingsearch.syncMapping();
+			$('#sync-btn').attr("disabled","disabled");
+		}
 	},
 	
 	displayMapping : function(data, textStatus, jqXHR) {

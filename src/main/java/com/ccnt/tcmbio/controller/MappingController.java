@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccnt.tcmbio.data.MappingData;
+import com.ccnt.tcmbio.data.MappingSyncData;
 import com.ccnt.tcmbio.service.MappingService;
 
 @Controller
@@ -35,15 +36,15 @@ public class MappingController {
         this.mappingService = mappingService;
     }
 
-    @RequestMapping(value="/v0.9/mappingsync", method=RequestMethod.GET)
-    public @ResponseBody String syncMappingGraph() throws Exception{
+    @RequestMapping(value="/v0.9/getsyncprogress", method=RequestMethod.GET)
+    public @ResponseBody String getSyncProgress() throws Exception{
 
-        LOGGER.debug("Reveived GET request: /v0.9/mappingsync");
+        LOGGER.debug("Reveived GET request: /v0.9/getsyncprogress");
 
         try {
-            final Integer status = mappingService.syncMappingGraph();
+            final MappingSyncData mappingSyncData = mappingService.syncMappingProgress();
             final ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(status);
+            return objectMapper.writeValueAsString(mappingSyncData);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -18,4 +18,8 @@
         	<property name="ontologyDAO" ref="ontologyDAO" />
         </bean>
         
+        <bean id="tcmInferService" class="com.ccnt.tcmbio.service.impl.TcmInferServiceImpl">
+        	<property name="tcmInferDao" ref="tcmInferDao" />
+        </bean>
+        
 </beans>

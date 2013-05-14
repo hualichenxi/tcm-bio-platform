@@ -26,4 +26,8 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
+	<bean id="tcmInferDao" class="com.ccnt.tcmbio.dao.impl.TcmInferDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
 </beans>

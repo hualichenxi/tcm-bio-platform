@@ -7,6 +7,7 @@
 package com.ccnt.tcmbio.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +16,9 @@ import org.apache.logging.log4j.Logger;
 import com.ccnt.tcmbio.dao.MappingDAO;
 import com.ccnt.tcmbio.dao.OntologyDAO;
 import com.ccnt.tcmbio.data.MappingData;
+import com.ccnt.tcmbio.data.MappingSyncData;
 import com.ccnt.tcmbio.data.OntologyData;
+import com.ccnt.tcmbio.enumdata.MappingSync;
 import com.ccnt.tcmbio.service.MappingService;
 
 public class MappingServiceImpl implements MappingService{
@@ -23,6 +26,7 @@ public class MappingServiceImpl implements MappingService{
     private MappingDAO mappingDAO;
     private OntologyDAO ontologyDAO;
     private final String graphName = "http://localhost:8890/graph_mapping_relations";
+    private final Object lockObject = new Object();
 
     private static final Logger LOGGER = LogManager.getLogger(MappingServiceImpl.class.getName());
 
@@ -37,16 +41,42 @@ public class MappingServiceImpl implements MappingService{
     @Override
     public Integer syncMappingGraph(){
 
+        LOGGER.debug("synchronization process begins");
         try {
+
+            synchronized (lockObject) {
+                if (MappingSync.INSTANCE.getStatus() == 1) {
+                    return -1;
+                }
+                MappingSync.INSTANCE.setStatus(1);
+            }
+
             if (!mappingDAO.ifExistMappingGraph(graphName)) {
                 mappingDAO.newMappingGraph(graphName);
             }
+
             final ArrayList<OntologyData> ontologyDatas = ontologyDAO.findAllGraphs();
-            final Iterator<OntologyData> ontoIterator = ontologyDatas.iterator();
+            final Integer ontologyDatasLength = ontologyDatas.size();
+            Integer ontologyItemSum = 0;
+            Integer ontologyDatasLengthCurr = 0;
+            Integer ontologyItemCurr = 0;
+
+            Iterator<OntologyData> ontoIterator = ontologyDatas.iterator();
+            while (ontoIterator.hasNext()) {
+                final OntologyData ontologyData = ontoIterator.next();
+                ontologyItemSum += ontologyData.getItemnum();
+            }
+            LOGGER.debug("ontology item sum is: {}", ontologyItemSum);
+
+            final long startTime =  System.currentTimeMillis();
+
+            ontoIterator = ontologyDatas.iterator();
             while (ontoIterator.hasNext()) {
                 final OntologyData ontologyData = ontoIterator.next();
                 int mappingcount = 0;
                 final String graph1 = ontologyData.getName();
+
+                LOGGER.debug("synchronization process @ graph: {}", graph1);
 
                 final Iterator<OntologyData> inOntoIterator = ontologyDatas.iterator();
                 while (inOntoIterator.hasNext()) {
@@ -63,15 +93,56 @@ public class MappingServiceImpl implements MappingService{
                         }
                     }
                 }
+
+                final long middleTime = System.currentTimeMillis();
+                final long elapasedTime = middleTime - startTime;
+                MappingSync.INSTANCE.setPassedTime(elapasedTimeToString(elapasedTime));
+
+                final long estimateTotalTime = elapasedTime * ontologyItemSum / ontologyItemCurr;
+                MappingSync.INSTANCE.setEstimateTime(elapasedTimeToString(estimateTotalTime));
+
+                ontologyDatasLengthCurr++;
+                ontologyItemCurr += ontologyData.getItemnum();
+                MappingSync.INSTANCE.setOntologyPercentF(ontologyDatasLengthCurr.toString() + '/' + ontologyDatasLength.toString());
+                MappingSync.INSTANCE.setOntologyPercent(ontologyDatasLengthCurr*100/ontologyDatasLength);
+                MappingSync.INSTANCE.setItemPercentF(ontologyItemCurr.toString() + '/' + ontologyItemSum.toString());
+                MappingSync.INSTANCE.setItemPercent(ontologyItemCurr*100/ontologyItemSum);
+
                 mappingDAO.insertMappingTriple(graphName, graph1, mappingcount);
             }
+            MappingSync.INSTANCE.setStatus(0);
             return 1;
         } catch (final Exception e) {
             // TODO Auto-generated catch block
+            MappingSync.INSTANCE.setStatus(-1);
             e.printStackTrace();
         }
-
+        MappingSync.INSTANCE.setStatus(0);
         return -1;
+    }
+
+    @Override
+    public String elapasedTimeToString(final long elapasedTIme){
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(elapasedTIme);
+        final String dayString = Integer.toString(calendar.get(Calendar.DATE));
+        final String hourString = Integer.toString(calendar.get(Calendar.HOUR));
+        final String minuString = Integer.toString(calendar.get(Calendar.MINUTE));
+        final String secoString = Integer.toString(calendar.get(Calendar.SECOND));
+        return dayString + "天" + hourString + "小时" + minuString + "分" + secoString + "秒";
+    }
+
+    @Override
+    public MappingSyncData syncMappingProgress(){
+        final MappingSyncData mappingSyncData = new MappingSyncData();
+        mappingSyncData.setStatus(MappingSync.INSTANCE.getStatus());
+        mappingSyncData.setEstimateTime(MappingSync.INSTANCE.getEstimateTime());
+        mappingSyncData.setItemPercent(MappingSync.INSTANCE.getItemPercent());
+        mappingSyncData.setItemPercentF(MappingSync.INSTANCE.getItemPercentF());
+        mappingSyncData.setOntologyPercent(MappingSync.INSTANCE.getOntologyPercent());
+        mappingSyncData.setOntologyPercentF(MappingSync.INSTANCE.getOntologyPercentF());
+        mappingSyncData.setPassedTime(MappingSync.INSTANCE.getPassedTime());
+        return mappingSyncData;
     }
 
     @Override
