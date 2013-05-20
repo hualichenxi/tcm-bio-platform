@@ -50,6 +50,23 @@ var mappingsearch = {
 	urlSearch : "../v0.9/mapping/ks/",
 	urlGetDetail : "../v0.9/mapping/ds/",
 	currentOpen : "",// make the open callpase tab
+	spinopts : {
+		lines: 7, // The number of lines to draw
+  		length: 8, // The length of each line
+  		width: 4, // The line thickness
+  		radius: 5, // The radius of the inner circle
+  		corners: 1, // Corner roundness (0..1)
+  		rotate: 0, // The rotation offset
+  		color: '#000', // #rgb or #rrggbb
+  		speed: 1, // Rounds per second
+  		trail: 60, // Afterglow percentage
+  		shadow: false, // Whether to render a shadow
+  		hwaccel: false, // Whether to use hardware acceleration
+  		className: 'spinner', // The CSS class to assign to the spinner
+  		zIndex: 2e9, // The z-index (defaults to 2000000000)
+  		top: 'auto', // Top position relative to parent in px
+  		left: 'auto' // Left position relative to parent in px
+	},
 	
 	syncMapping: function(){
 		commonjs.ajax("GET", this.urlSync, "", "", this.syncMappingCallBack, commonjs.showErrorTip);
@@ -69,6 +86,7 @@ var mappingsearch = {
 	
 	getDetailMapping : function(graphNameJson) {
 		commonjs.ajax("POST", this.urlGetDetail, graphNameJson, "", this.displayDetail, commonjs.showErrorTip);
+		$('#' + mappingsearch.currentOpen + ' .spin-progress').spin(this.spinopts);
 	},
 	
 	syncMappingCallBack : function(data, textStatus, jqXHR){
@@ -96,6 +114,7 @@ var mappingsearch = {
 	},
 	
 	displayDetail : function(data, textStatus, jqXHR) {
+		$('#' + mappingsearch.currentOpen + ' .spin-progress').spin(false);
 		data = commonjs.strToJson(data);
 		$('#' + mappingsearch.currentOpen + ' .sub-mapping-graph').remove();
 		for(var i=0; i < data.length; i++) {

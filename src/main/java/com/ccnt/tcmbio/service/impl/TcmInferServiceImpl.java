@@ -71,4 +71,40 @@ public class TcmInferServiceImpl implements TcmInferService{
         return null;
     }
 
+
+    @Override
+    public ArrayList<String> getDiseaseName(final String tcmName, final Integer start, final Integer offset){
+        return tcmInferDao.getDiseaseName(tcmName, start, offset);
+    }
+
+    @Override
+    public ArrayList<String> getDiseaseID(final String diseaseName, final Integer start, final Integer offset){
+        return tcmInferDao.getDiseaseID(diseaseName, start, offset);
+    }
+
+    @Override
+    public ArrayList<String> getDrugID(final String diseaseID, final Integer start, final Integer offset){
+        return tcmInferDao.getDrugID(diseaseID, start, offset);
+    }
+
+    @Override
+    public ArrayList<String> getTargetID(final String drugID, final Integer start, final Integer offset){
+        return tcmInferDao.getTargetID(drugID, start, offset);
+    }
+
+    @Override
+    public ArrayList<String> getProtein(final String targetID, final Integer start, final Integer offset){
+        return tcmInferDao.getProtein(targetID, start, offset);
+    }
+
+    @Override
+    public ArrayList<String> getGeneID(final String protein, final Integer start, final Integer offset){
+        return tcmInferDao.getGeneID(protein, start, offset);
+    }
+
+    @Override
+    public ArrayList<String> getGeneProduct(final String geneID, final Integer start, final Integer offset){
+        return tcmInferDao.getGeneProduct(geneID, start, offset);
+    }
+
 }

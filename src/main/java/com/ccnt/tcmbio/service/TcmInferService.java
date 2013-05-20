@@ -21,4 +21,18 @@ public interface TcmInferService {
 
     public ArrayList<String> fuzzyMatchTcm(String tcmName);
 
+    public ArrayList<String> getDiseaseName(String tcmName, Integer start, Integer offset);
+
+    public ArrayList<String> getDiseaseID(String diseaseName, Integer start, Integer offset);
+
+    public ArrayList<String> getDrugID(String diseaseID, Integer start, Integer offset);
+
+    public ArrayList<String> getTargetID(String drugID, Integer start, Integer offset);
+
+    public ArrayList<String> getProtein(String targetID, Integer start, Integer offset);
+
+    public ArrayList<String> getGeneID(String protein, Integer start, Integer offset);
+
+    public ArrayList<String> getGeneProduct(String geneID, Integer start, Integer offset);
+
 }

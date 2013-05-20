@@ -11,7 +11,7 @@
   <properties>
 	  <spring.version>3.1.4.RELEASE</spring.version>
 	  <junit.version>4.11</junit.version>
-	  <jdk.version>1.7</jdk.version>
+	  <jdk.version>1.6</jdk.version>
   </properties>
   
   <dependencies>
@@ -58,8 +58,8 @@
 		<groupId>com.local.virtjdbc4</groupId>
 		<artifactId>virtjdbc4</artifactId>
 		<version>1.0.0</version>
-		<scope>system</scope>
-		<systemPath>${basedir}/lib/virtjdbc4.jar</systemPath>
+		<!--scope>system</scope>
+		<systemPath>${basedir}/lib/virtjdbc4.jar</systemPath-->
 	</dependency>
 	
 	<dependency>
@@ -85,6 +85,15 @@
 			<configuration>
 				<source>${jdk.version}</source>
 				<target>${jdk.version}</target>
+			</configuration>
+		</plugin>
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>tomcat-maven-plugin</artifactId>
+			<configuration>
+				<url>http://10.214.0.144:8080/manager</url>
+				<server>TomcatServer</server>
+				<path>/tcm-bio-platform</path>
 			</configuration>
 		</plugin>
 	</plugins>
