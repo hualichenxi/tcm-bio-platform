@@ -51,6 +51,39 @@ public class OntologyController {
         return null;
     }
 
+    @RequestMapping(value = "/v0.9/ontologies/cached/", method = RequestMethod.GET)
+    public @ResponseBody String getAllCachedOntologies() throws Exception{
+
+        LOGGER.debug("Reveived GET request: /v0.9/ontologies/cached");
+
+        try {
+//            final OntologyDAO ontologyDAO = (OntologyDAO)context.getBean("ontologyDAO");
+            final ArrayList<OntologyData> ontologies = ontologyService.getAllCachedOntologies();
+            final ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(ontologies);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/ontologies/sync", method = RequestMethod.GET)
+    public @ResponseBody String syncAllOntologies() throws Exception{
+
+        LOGGER.debug("Reveived GET request: /v0.9/ontologies/sync");
+
+        try {
+            final boolean status = ontologyService.syncOntologiesGraph();
+            final ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(status);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @RequestMapping(value = "/v0.9/ontologies/{keyword}", method = RequestMethod.GET)
     public @ResponseBody String searchOntology(@PathVariable final String keyword) throws Exception{
 

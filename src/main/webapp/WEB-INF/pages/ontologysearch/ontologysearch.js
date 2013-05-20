@@ -40,7 +40,7 @@ $.expr[":"].contains = $.expr.createPseudo(function (arg) {
 
 var ontologysearch = {
 	
-	urlGetAll : "../v0.9/ontologies",
+	urlGetAll : "../v0.9/ontologies/cached/",
 	urlSearch : "../v0.9/ontologies/",
 	
 	getAllOntologies : function() {

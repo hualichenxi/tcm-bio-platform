@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.ccnt.tcmbio.dao.OntologyDAO;
@@ -168,6 +169,110 @@ public class OntologyDAOImpl extends JdbcDaoSupport implements OntologyDAO{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public ArrayList<OntologyData> findAllCachedOntologies(final String graphName){
+        final String sparql = "sparql select * from <" + graphName + "> where {?graphname tcmbio:ontologycount ?itemcount}";
+        final ArrayList<OntologyData> ontologies = new ArrayList<OntologyData>();
+
+        LOGGER.debug("find all cached Ontologies - query virtuoso: {}", sparql);
+
+        try {
+
+            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sparql);
+
+            for (final Map<String, Object> row : rows) {
+                final OntologyData ontology = new OntologyData();
+
+                final String nameString = row.get("graphname").toString();
+                ontology.setName(nameString);
+
+                final Integer itemnum = Integer.parseInt((row.get("itemcount")).toString());
+                ontology.setItemnum(itemnum);
+
+                ontology.setDescription("no description");
+
+                ontologies.add(ontology);
+            }
+
+            return ontologies;
+
+        } catch (final Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean newOntologyGraph(final String graphName){
+        final String sparql = "sparql create graph<" + graphName + ">";
+
+        LOGGER.debug("newOntologyGraph - query virtuoso: {}", sparql);
+
+        try {
+            getJdbcTemplate().update(sparql);
+            return true;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean insertOntology(final String graphName, final OntologyData ontologyData){
+        final String sparql = "sparql insert in graph<" + graphName + "> {<" + ontologyData.getName()
+                + "> tcmbio:ontologycount " + ontologyData.getItemnum() + " }";
+
+        LOGGER.debug("insertMappingTriple - query virtuoso: {}", sparql);
+
+        try {
+            getJdbcTemplate().update(sparql);
+            return true;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean ifExistMappingGraph(final String graphName){
+        final String sparql = "sparql select count(*) as ?count {graph <" + graphName + "> {?s ?p ?o}}";
+
+        LOGGER.debug("ifExistMappingGraph - query virtuoso: {}", sparql);
+
+        try {
+            if(getJdbcTemplate().queryForInt(sparql) !=0 ){
+                return true;
+            } else {
+                return false;
+            }
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean dropOntolgyGraph(final String graphName){
+        final String sparql = "sparql drop silent graph<" + graphName + ">";
+
+        LOGGER.debug("dropMappingGraph - query virtuoso: {}", sparql);
+
+        try {
+            getJdbcTemplate().update(sparql);
+            return true;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
 /*    public ArrayList<OntologyData> findAllOntologies() {

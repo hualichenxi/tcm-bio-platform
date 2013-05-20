@@ -16,4 +16,8 @@ public interface OntologyService {
 
     public ArrayList<OntologyData> searchOntologies(String keyword);
 
+    public ArrayList<OntologyData> getAllCachedOntologies();
+
+    public boolean syncOntologiesGraph();
+
 }

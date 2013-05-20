@@ -18,6 +18,16 @@ public interface OntologyDAO {
 
     public ArrayList<OntologyData> findAllOntologiesv1_0();
 
+    public ArrayList<OntologyData> findAllCachedOntologies(String graphName);
+
     public ArrayList<OntologyData> searchOntologies(final String keyword);
+
+    public boolean newOntologyGraph(String graphName);
+
+    public boolean insertOntology(String graphName, OntologyData ontologyData);
+
+    public boolean dropOntolgyGraph(String graphName);
+
+    public boolean ifExistMappingGraph(final String graphName);
 
 }

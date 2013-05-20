@@ -55,11 +55,11 @@
 	</dependency>
 	
 	<dependency>
-		<groupId>virtjdbc4</groupId>
+		<groupId>com.local.virtjdbc4</groupId>
 		<artifactId>virtjdbc4</artifactId>
 		<version>1.0.0</version>
 		<scope>system</scope>
-		<systemPath>/home/tonghao/download/virtjdbc4.jar</systemPath>
+		<systemPath>${basedir}/lib/virtjdbc4.jar</systemPath>
 	</dependency>
 	
 	<dependency>
@@ -81,6 +81,7 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.3.2</version>
 			<configuration>
 				<source>${jdk.version}</source>
 				<target>${jdk.version}</target>
