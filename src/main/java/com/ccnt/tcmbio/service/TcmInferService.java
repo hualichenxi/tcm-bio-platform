@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.ccnt.tcmbio.data.TcmInferData;
 import com.ccnt.tcmbio.data.TcmSearchData;
+import com.ccnt.tcmbio.data.graph.Graphml;
 
 public interface TcmInferService {
 
@@ -21,18 +22,18 @@ public interface TcmInferService {
 
     public ArrayList<String> fuzzyMatchTcm(String tcmName);
 
-    public ArrayList<String> getDiseaseName(String tcmName, Integer start, Integer offset);
+    public Graphml getDiseaseName(String tcmName, Integer start, Integer offset);
 
-    public ArrayList<String> getDiseaseID(String diseaseName, Integer start, Integer offset);
+    public Graphml getDiseaseID(String diseaseName, Integer start, Integer offset);
 
-    public ArrayList<String> getDrugID(String diseaseID, Integer start, Integer offset);
+    public Graphml getDrugID(String diseaseID, Integer start, Integer offset);
 
-    public ArrayList<String> getTargetID(String drugID, Integer start, Integer offset);
+    public Graphml getTargetID(String drugID, Integer start, Integer offset);
 
-    public ArrayList<String> getProtein(String targetID, Integer start, Integer offset);
+    public Graphml getProtein(String targetID, Integer start, Integer offset);
 
-    public ArrayList<String> getGeneID(String protein, Integer start, Integer offset);
+    public Graphml getGeneID(String protein, Integer start, Integer offset);
 
-    public ArrayList<String> getGeneProduct(String geneID, Integer start, Integer offset);
+    public Graphml getGeneProduct(String geneID, Integer start, Integer offset);
 
 }

@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>中医药映射搜索</title>
+		<title>Mapping Search</title>
 		<!--library-->
 		<script src="../lib/jquery-1.8.1.min.js"></script>
 		<script src="../lib/bootstrap/js/bootstrap.min.js"></script>
@@ -21,26 +21,24 @@
 	<body>
 		<div class="navbar">
 			<div class="navbar-inner navbar-fixed-top">
-				<a class="brand" href="../entitysearch/index.html">TCM-BIO平台</a>
+				<a class="brand" href="../entitysearch/index.html">TCM-BIO</a>
 				<ul class="nav">
-					<li><a href="../ontologysearch/index.html">本体搜索</a></li>
-					<li><a href="../termsearch/index.html">术语搜索</a></li>
-					<li class="active"><a href="index.html">中西医映射搜索</a></li>
-					<li><a href="../tcminference/index.html">TCM推理搜索</a></li>
+					<li><a href="../ontologysearch/index.html">Ontology Search</a></li>
+					<li><a href="../termsearch/index.html">Term Search</a></li>
+					<li class="active"><a href="../mappingsearch/index.html">Mapping Search</a></li>
+					<li><a href="../tcminference/index.html">TCM Inference Search</a></li>
 				</ul>
 				<ul class="nav pull-right">
-					<li><a href="index.html"><i class="icon-black icon-question-sign"></i>帮助</a></li>
+					<li><a href="index.html"><i class="icon-black icon-question-sign"></i>HELP</a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="page-header">
 			<div class="row-fluid">
-				<div class="span3">
-					<h2>中医药映射搜索</h2>
-				</div>
-				<div class="span4" style="margin-top:30px; margin-left:-30px">
-					<p>中医药本体之间的关联关系</p>
-				</div>
+				<blockquote>
+					<h2>Mapping Search</h2>
+					<small>Search the relations between TCM-realted ontologies</small>
+				</blockquote>
 			</div>
 		</div>
 		<div class="container-fluid span11 offset1">
@@ -49,14 +47,14 @@
 			    	<div class="accordion-heading">
 				     	<div class="accordion-toggle row-fluid">
 					     	<div class="span5">
-					     		本体名称
+					     		Ontology Name
 					     	</div>
 					      	<div class="span4">
-					      		有映射关系的本体数目
+					      		Mappings
 					      	</div>
 					      	<div class="span2 hide">
 					      		<button class="btn btn-info" id="sync-btn">
-					      			<i class="icon-repeat icon-white"></i>更新映射关系
+					      			<i class="icon-repeat icon-white"></i>Update Mappings
 					      		</button>
 					      	</div>
 				      	</div>
@@ -73,7 +71,7 @@
 			    	  		</div>
 			    	  		<div class="span2">
 			    	  			<button class="btn btn-link mapping-detail-btn" data-toggle="collapse" data-target="#collapse0">
-			    	  				<i class="icon-chevron-up icon-black"></i>详细
+			    	  				<i class="icon-chevron-up icon-black"></i>Details
 			    	  			</button>
 			    	  		</div>
 			    	  	</div>
@@ -83,8 +81,8 @@
 				        	<table class="table table-striped">
 				        		<thead>
 				        			<tr>
-					        			<th>存在映射关系的本体</th>
-					        			<th>映射数目</th>
+					        			<th>Mapping Ontoliges</th>
+					        			<th>Number of apping Items</th>
 				        			</tr>
 				        		</thead>
 				        		<tbody class="sub-mapping-graphs spin-progress">

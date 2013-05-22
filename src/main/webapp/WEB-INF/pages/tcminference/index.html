@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>实体搜索</title>
+		<title>TCM Inference Search</title>
 		<!--library-->
 		<script src="../lib/jquery-1.8.1.min.js"></script>
 		<script src="../lib/bootstrap/js/bootstrap.min.js"></script>
@@ -22,35 +22,33 @@
 	<body>
 		<div class="navbar">
 			<div class="navbar-inner navbar-fixed-top">
-				<a class="brand" href="#">TCM-BIO平台</a>
+				<a class="brand" href="../entitysearch/index.html">TCM-BIO</a>
 				<ul class="nav">
-					<li><a href="../ontologysearch/index.html">本体搜索</a></li>
-					<li><a href="../termsearch/index.html">术语搜索</a></li>
-					<li><a href="../mappingsearch/index.html">中西医映射搜索</a></li>
-					<li class="active"><a href="../tcminference/index.html">TCM推理搜索</a></li>
+					<li><a href="../ontologysearch/index.html">Ontology Search</a></li>
+					<li><a href="../termsearch/index.html">Term Search</a></li>
+					<li><a href="../mappingsearch/index.html">Mapping Search</a></li>
+					<li class="active"><a href="../tcminference/index.html">TCM Inference Search</a></li>
 				</ul>
 				<ul class="nav pull-right">
-					<li><a href="index.html"><i class="icon-black icon-question-sign"></i>帮助</a></li>
+					<li><a href="index.html"><i class="icon-black icon-question-sign"></i>HELP</a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="page-header">
 			<div class="row-fluid">
-				<div class="span3">
-					<h2>TCM推理搜索</h2>
-				</div>
-				<div class="span5" style="margin-top:30px; margin-left:-30px">
-					<p>基于中药的蛋白质，基因，疾病等推理结果的搜索</p>
-				</div>
+				<blockquote>
+					<h2>TCM Inference Search</h2>
+					<small>Inference information search base on TCM</small>
+				</blockquote>
 			</div>
 		</div>
 		<div>
 			<div class="form-horizontal">
 				<div class="control-group">
-					<label class="control-label">中药</label>
+					<label class="control-label">TCM</label>
 					<div class="controls">
 						<input type="text" id="tcm-keyword" placeholder="Ginkgo biloba, Curcuma longa..." value="Ginkgo biloba"/>
-						<button class="btn" id="tcm-search">搜索</button>
+						<button class="btn" id="tcm-search">Search</button>
 						<span class="help-inline" id="total-or-fuzzytip">
 						</span>
 					</div>
@@ -60,13 +58,13 @@
 		<div class="well offset1 span11" style="min-height: 500px">
 			<ul class="nav nav-tabs">
 				<li class="active">
-					<a href="#tab1" data-toggle="tab">列表</a>
+					<a href="#tab1" data-toggle="tab">List</a>
 				</li>
 				<li>
-					<a href="#tab2" data-toggle="tab">详细列表</a>
+					<a href="#tab2" data-toggle="tab">Detail List</a>
 				</li>
 				<li>
-					<a href="#tab3" data-toggle="tab">图表</a>
+					<a href="#tab3" data-toggle="tab">Graph</a>
 				</li>
 			</ul>
 			<div class="tab-content">

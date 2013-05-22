@@ -103,7 +103,7 @@ public class TcmInferDaoImpl extends JdbcDaoSupport implements TcmInferDao{
     @Override
     public ArrayList<String> getDiseaseName(final String tcm, final Integer start, final Integer offset){
 
-        final String sparql = "sparql select (*) from <" + TCMGeneDIT + "> where {"
+        final String sparql = "sparql select * from <" + TCMGeneDIT + "> where {"
                 + tcm + " " + TCMGeneDIT_Treatment + " ?diseaseName}";
 
         LOGGER.debug("getDiseaseName - query virtuoso: {}", sparql);
@@ -128,7 +128,7 @@ public class TcmInferDaoImpl extends JdbcDaoSupport implements TcmInferDao{
     @Override
     public ArrayList<String> getDiseaseID(final String diseaseName, final Integer start, final Integer offset){
 
-        final String sparql = "sparql select (*) from <" + Tcm_Diseasesome_Mapping + "> where {"
+        final String sparql = "sparql select * from <" + Tcm_Diseasesome_Mapping + "> where {"
                 + diseaseName + " " + OWL_SameAs + " ?diseaseID}";
 
         LOGGER.debug("getDiseaseID - query virtuoso: {}", sparql);
@@ -153,7 +153,7 @@ public class TcmInferDaoImpl extends JdbcDaoSupport implements TcmInferDao{
     @Override
     public ArrayList<String> getDrugID(final String diseaseID, final Integer start, final Integer offset){
 
-        final String sparql = "sparql select (*) from <" + Diseasome + "> where {"
+        final String sparql = "sparql select * from <" + Diseasome + "> where {"
                 + diseaseID + " " + Diseasesome_PossibleDrug + " ?drugID}";
 
         LOGGER.debug("getDrugID - query virtuoso: {}", sparql);
@@ -178,7 +178,7 @@ public class TcmInferDaoImpl extends JdbcDaoSupport implements TcmInferDao{
     @Override
     public ArrayList<String> getTargetID(final String drugID, final Integer start, final Integer offset){
 
-        final String sparql = "sparql select (*) from <" + DrugBank + "> where {"
+        final String sparql = "sparql select * from <" + DrugBank + "> where {"
                 + drugID + " " + Drugbank_Target + " ?targetID}";
 
         LOGGER.debug("getTargetID - query virtuoso: {}", sparql);
@@ -203,7 +203,7 @@ public class TcmInferDaoImpl extends JdbcDaoSupport implements TcmInferDao{
     @Override
     public ArrayList<String> getProtein(final String targetID, final Integer start, final Integer offset){
 
-        final String sparql = "sparql select (*) from <" + DrugBank + "> where {"
+        final String sparql = "sparql select * from <" + DrugBank + "> where {"
                 + targetID + " " + Drugbank_SwissprotId + " ?proteinAcce}";
 
         LOGGER.debug("getProtein - query virtuoso: {}", sparql);
@@ -228,7 +228,7 @@ public class TcmInferDaoImpl extends JdbcDaoSupport implements TcmInferDao{
     @Override
     public ArrayList<String> getGeneID(final String protein, final Integer start, final Integer offset){
 
-        final String sparql = "sparql select (*) from <" + Protein_Gene_Mapping + "> where {"
+        final String sparql = "sparql select * from <" + Protein_Gene_Mapping + "> where {"
                 + protein + " " + UniprotGO_ClassifiedWith + " ?geneID}";
 
         LOGGER.debug("getGeneID - query virtuoso: {}", sparql);
@@ -253,7 +253,7 @@ public class TcmInferDaoImpl extends JdbcDaoSupport implements TcmInferDao{
     @Override
     public ArrayList<String> getGeneProduct(final String geneID, final Integer start, final Integer offset){
 
-        final String sparql = "sparql select (*) from <" + Gene_Ontology + "> where {"
+        final String sparql = "sparql select * from <" + Gene_Ontology + "> where {"
                 + geneID + " " + Rdfs_Label + " ?geneProduct}";
 
         LOGGER.debug("getGeneProduct - query virtuoso: {}", sparql);

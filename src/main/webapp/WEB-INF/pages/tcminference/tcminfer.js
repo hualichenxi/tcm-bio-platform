@@ -25,7 +25,7 @@ $(function(){
 		var keyword = $('#tcm-keyword').val();
 		window.open("index.html?kw=" + keyword + "&s=" + tcminfer.start + "&o=" + tcminfer.offset, "_self");
 	});
-		
+	
 });
 
 // ================= UTILITY FUNCTIONS =========================================

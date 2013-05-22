@@ -6,8 +6,6 @@
 
 package com.ccnt.tcmbio.controller;
 
-import java.util.ArrayList;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccnt.tcmbio.data.TcmSearchData;
+import com.ccnt.tcmbio.data.graph.Graphml;
 import com.ccnt.tcmbio.service.TcmInferService;
 
 @Controller
@@ -53,7 +52,7 @@ public class TcmInferController {
     //todo
 
     @RequestMapping(value="/v0.9/tcminfer/tcm2disease/kw={tcmName}&s={start}&o={offset}", method=RequestMethod.GET)
-    public @ResponseBody ArrayList<String> getDisease(@PathVariable final String tcmName, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
+    public @ResponseBody Graphml getDisease(@PathVariable final String tcmName, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
 
         LOGGER.debug("Received GET request: /v0.9/tcminfer/tcm2disease/kw={}&s={}&o={}", tcmName, start, offset);
 
@@ -67,14 +66,12 @@ public class TcmInferController {
     }
 
     @RequestMapping(value="/v0.9/tcminfer/disname2disid/kw={diseaseName}&s={start}&o={offset}", method=RequestMethod.GET)
-    public @ResponseBody String getDiseaseID(@PathVariable final String diseaseName, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
+    public @ResponseBody Graphml getDiseaseID(@PathVariable final String diseaseName, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
 
         LOGGER.debug("Received GET request: /v0.9/tcminfer/disname2disid/kw={}&s={}&o={}", diseaseName, start, offset);
 
         try {
-            final TcmSearchData tcmSearchDatas = tcmInferService.getTcmInference(diseaseName, start, offset);
-            final ObjectMapper objectMapper =  new ObjectMapper();
-            return objectMapper.writeValueAsString(tcmSearchDatas);
+            return tcmInferService.getDiseaseID(diseaseName, start, offset);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -83,14 +80,12 @@ public class TcmInferController {
     }
 
     @RequestMapping(value="/v0.9/tcminfer/disid2drugid/kw={diseaseID}&s={start}&o={offset}", method=RequestMethod.GET)
-    public @ResponseBody String getDrugID(@PathVariable final String diseaseID, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
+    public @ResponseBody Graphml getDrugID(@PathVariable final String diseaseID, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
 
         LOGGER.debug("Received GET request: /v0.9/tcminfer/disid2drugid/kw={}&s={}&o={}", diseaseID, start, offset);
 
         try {
-            final TcmSearchData tcmSearchDatas = tcmInferService.getTcmInference(diseaseID, start, offset);
-            final ObjectMapper objectMapper =  new ObjectMapper();
-            return objectMapper.writeValueAsString(tcmSearchDatas);
+            return tcmInferService.getDrugID(diseaseID, start, offset);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -99,14 +94,13 @@ public class TcmInferController {
     }
 
     @RequestMapping(value="/v0.9/tcminfer/drugid2targetid/kw={drugID}&s={start}&o={offset}", method=RequestMethod.GET)
-    public @ResponseBody String getTargetID(@PathVariable final String drugID, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
+    public @ResponseBody Graphml getTargetID(@PathVariable final String drugID, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
 
         LOGGER.debug("Received GET request: /v0.9/tcminfer/drugid2targetid/kw={}&s={}&o={}", drugID, start, offset);
 
         try {
-            final TcmSearchData tcmSearchDatas = tcmInferService.getTcmInference(drugID, start, offset);
-            final ObjectMapper objectMapper =  new ObjectMapper();
-            return objectMapper.writeValueAsString(tcmSearchDatas);
+            final Graphml graphml = tcmInferService.getTargetID(drugID, start, offset);
+            return graphml;
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -115,14 +109,12 @@ public class TcmInferController {
     }
 
     @RequestMapping(value="/v0.9/tcminfer/target2protein/kw={targetID}&s={start}&o={offset}", method=RequestMethod.GET)
-    public @ResponseBody String getProtein(@PathVariable final String targetID, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
+    public @ResponseBody Graphml getProtein(@PathVariable final String targetID, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
 
         LOGGER.debug("Received GET request: /v0.9/tcminfer/target2protein/kw={}&s={}&o={}", targetID, start, offset);
 
         try {
-            final TcmSearchData tcmSearchDatas = tcmInferService.getTcmInference(targetID, start, offset);
-            final ObjectMapper objectMapper =  new ObjectMapper();
-            return objectMapper.writeValueAsString(tcmSearchDatas);
+            return tcmInferService.getProtein(targetID, start, offset);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -131,14 +123,12 @@ public class TcmInferController {
     }
 
     @RequestMapping(value="/v0.9/tcminfer/protein2geneid/kw={protein}&s={start}&o={offset}", method=RequestMethod.GET)
-    public @ResponseBody String getGeneID(@PathVariable final String protein, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
+    public @ResponseBody Graphml getGeneID(@PathVariable final String protein, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
 
         LOGGER.debug("Received GET request: /v0.9/tcminfer/protein2geneid/kw={}&s={}&o={}", protein, start, offset);
 
         try {
-            final TcmSearchData tcmSearchDatas = tcmInferService.getTcmInference(protein, start, offset);
-            final ObjectMapper objectMapper =  new ObjectMapper();
-            return objectMapper.writeValueAsString(tcmSearchDatas);
+            return tcmInferService.getGeneID(protein, start, offset);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -146,21 +136,19 @@ public class TcmInferController {
         return null;
     }
 
-    @RequestMapping(value="/v0.9/tcminfer/geneid2geneprod/kw={targetID}&s={start}&o={offset}", method=RequestMethod.GET)
-    public @ResponseBody String getGeneProduct(@PathVariable final String geneID, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
+    @RequestMapping(value="/v0.9/tcminfer/geneid2geneprod/kw={geneID}&s={start}&o={offset}", method=RequestMethod.GET)
+    public @ResponseBody Graphml getGeneProduct(@PathVariable final String geneID, @PathVariable final Integer start, @PathVariable final Integer offset) throws Exception{
 
         LOGGER.debug("Received GET request: /v0.9/tcminfer/geneid2geneprod/kw={}&s={}&o={}", geneID, start, offset);
 
         try {
-            final TcmSearchData tcmSearchDatas = tcmInferService.getTcmInference(geneID, start, offset);
-            final ObjectMapper objectMapper =  new ObjectMapper();
-            return objectMapper.writeValueAsString(tcmSearchDatas);
+            return tcmInferService.getGeneProduct(geneID, start, offset);
+
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
     }
-
 
 }
