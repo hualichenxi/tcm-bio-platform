@@ -16,8 +16,9 @@
 	<body>
 		<div class="navbar">
 			<div class="navbar-inner navbar-fixed-top">
-				<a class="brand" href="../entitysearch/index.html">TCM-BIO</a>
+				<a class="brand" href="../indexpage/index.html">TCM-BIO</a>
 				<ul class="nav">
+					<li><a href="../entitysearch/index.html">Search</a></li>
 					<li><a href="../ontologysearch/index.html">Ontology Search</a></li>
 					<li class="active"><a href="index.html">Term Search</a></li>
 					<li><a href="../mappingsearch/index.html">Mapping Search</a></li>
@@ -34,14 +35,148 @@
 					<h2>Terminology Search</h2>
 					<small>Search information related to Disease，Gene，TCM，Protein, Drug, Synonym</small>
 				</blockquote>
-				<!--div class="span4">
-					<h2>Terminology Search</h2>
-				</div>
-				<div class="span7" style="margin-top:30px; margin-left:-30px">
-					<p>Search information related to Disease，Gene，TCM，Protein, Drug, Synonym</p>
-				</div-->
 			</div>
-			
 		</div>
+		<div class="form-inline" style="margin: 0px 60px 0px 60px;">
+			<input type="text" class="span5" placeholder="Disease，Gene，TCM，Protein, Drug, Synonym"/>
+			<button class="btn">Search</button>
+		</div>
+		<div style="margin: 5px 50px 30px 70px;">
+			<label class="checkbox inline">
+				<input type="checkbox" id="inlineCheckbox1" value="option1"> Disease
+			</label>
+			<label class="checkbox inline">
+				<input type="checkbox" id="inlineCheckbox2" value="option2"> GeneID
+			</label>
+			<label class="checkbox inline">
+				<input type="checkbox" id="inlineCheckbox3" value="option3"> TCM
+			</label>
+			<label class="checkbox inline">
+				<input type="checkbox" id="inlineCheckbox4" value="option4"> Protein
+			</label>	
+			<label class="checkbox inline">
+				<input type="checkbox" id="inlineCheckbox5" value="option5"> Drug
+			</label>
+			<label class="checkbox inline">
+				<input type="checkbox" id="inlineCheckbox6" value="option6"> Synonym
+			</label>
+		</div>
+		<div class="container-fluid">
+			<div class="row-fluid">
+   		 		<div class="span6">
+   		 			<div class="row-fluid">
+	   		 			<div class="span10 offset1">
+	   		 				<h4>Adenocarcinoma <small>[Disease]</small></h4>
+	   		 				<blockquote class="muted" style="font-size:12px">
+	   		 					<ul class="inline">
+	   		 						<li><strong>Related TCM</strong>:</li>
+	   		 						<li>Hypericum_perforatum, Ginkgo_biloba, Ginkgo_biloba, Ginkgo_biloba</li>
+	   		 					</ul>
+	   		 					<ul class="inline">
+	   		 						<li><strong>Recommed Drugs</strong>:</li>
+	   		 						<li>Hypericum_perforatum, Ginkgo_biloba, Ginkgo_biloba, Ginkgo_biloba</li>
+	   		 					</ul>
+							</blockquote>
+	   		 			</div>
+	   		 			<div class="span1">
+	   		 				<ul class="thumbnails">
+	   		 					<li>
+	   		 						<a href="#" class="thumbnail span12" style="height:100px">
+	   		 							<i class="icon-chevron-right icon-grey"></i>
+	   		 						</a>
+	   		 					</li>
+	   		 				</ul>
+	   		 			</div>
+   		 			</div>
+   		 			<div class="span11 offset1">
+   		 				<h4>Adenocarcinoma <small>[Disease]</small></h4>
+   		 				<blockquote class="muted" style="font-size:12px">
+   		 					<ul class="inline">
+   		 						<li><strong>Related TCM</strong>:</li>
+   		 						<li>Hypericum_perforatum, Ginkgo_biloba, Ginkgo_biloba, Ginkgo_biloba</li>
+   		 					</ul>
+   		 					<ul class="inline">
+   		 						<li><strong>Recommed Drugs</strong>:</li>
+   		 						<li>Hypericum_perforatum, Ginkgo_biloba, Ginkgo_biloba, Ginkgo_biloba</li>
+   		 					</ul>
+						</blockquote>
+   		 			</div>
+   		 			<div class="span11 offset1">
+   		 				<h4>Adenocarcinoma <small>[Disease]</small></h4>
+   		 				<blockquote class="muted" style="font-size:12px">
+   		 					<ul class="inline">
+   		 						<li><strong>Related TCM</strong>:</li>
+   		 						<li>Hypericum_perforatum, Ginkgo_biloba, Ginkgo_biloba, Ginkgo_biloba</li>
+   		 					</ul>
+   		 					<ul class="inline">
+   		 						<li><strong>Recommed Drugs</strong>:</li>
+   		 						<li>Hypericum_perforatum, Ginkgo_biloba, Ginkgo_biloba, Ginkgo_biloba</li>
+   		 					</ul>
+						</blockquote>
+   		 			</div>
+    			</div>
+    			<div class="span6" style="margin-top:0px">
+    				<ul class="thumbnails">
+  						<li class="span10 offset1">
+    						<div class="thumbnail">
+      							<h3>Adenocarcinoma</h3>
+      							<dl>
+  									<dt>Related TCM: </dt>
+  									<dd>Hypericum_perforatum</dd>
+  									<dt>Recommed Drugs: </dt>
+  									<dd>Hypericum_perforatum</dd>
+								</dl>
+    						</div>
+	  					</li>
+					</ul>
+    			</div>
+  			</div>
+		</div>
+		<!--div class="well well-large" style="margin: 0px 60px 30px 60px;">
+			<div style="margin: 0px 80px 30px 80px;">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Class</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody id="ontologies-detail">
+						<tr>
+							<td>Disease Name</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Disease ID</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Disease Synonyms</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Disease Definition</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Disease Xrefs</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Related TCM Medicine</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Recommend Drugs</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Related Genes</td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div-->
 	</body>
 </html>

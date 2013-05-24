@@ -21,4 +21,8 @@
         	<property name="tcmInferService" ref="tcmInferService" />
         </bean>
         
+        <bean id="termController" class="com.ccnt.tcmbio.controller.TermController">
+        	<property name="termService" ref="termService" />
+        </bean>
+        
 </beans>

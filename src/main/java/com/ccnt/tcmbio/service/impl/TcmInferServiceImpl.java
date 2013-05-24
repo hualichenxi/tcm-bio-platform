@@ -9,7 +9,7 @@ package com.ccnt.tcmbio.service.impl;
 import static com.ccnt.tcmbio.data.Namespaces.DiseaseSome;
 import static com.ccnt.tcmbio.data.Namespaces.DrugBank;
 import static com.ccnt.tcmbio.data.Namespaces.GeneOntology;
-import static com.ccnt.tcmbio.data.Namespaces.TCMGeneDIT;
+import static com.ccnt.tcmbio.data.Namespaces.TCMGeneDITID;
 import static com.ccnt.tcmbio.data.Namespaces.UNIPROT;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class TcmInferServiceImpl implements TcmInferService{
 
             String tcm = tcmName.substring(0, 1).toUpperCase() + tcmName.substring(1).toLowerCase();
             tcm = tcm.replace(" ", "_");
-            tcm = TCMGeneDIT + "medicine/" + tcm;
+            tcm = TCMGeneDITID + "medicine/" + tcm;
             final ArrayList<TcmInferData> tcmInferData = tcmInferDao.getTcmInference(tcm, start, offset);
             tcmSearchData.setStatus(true);
             tcmSearchData.setTcmInferData(tcmInferData);
@@ -89,7 +89,7 @@ public class TcmInferServiceImpl implements TcmInferService{
     @Override
     public Graphml getDiseaseName(final String tcmName, final Integer start, final Integer offset){
         try {
-            final String url = TCMGeneDIT + "medicine/" + tcmName;
+            final String url = TCMGeneDITID + "medicine/" + tcmName;
             final ArrayList<String> leaves = tcmInferDao.getDiseaseName("<" + url + ">", start, offset);
             final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "treatment", "edge#0", "G#0", "directed");
             return new Graphml(graph);
@@ -103,7 +103,7 @@ public class TcmInferServiceImpl implements TcmInferService{
     @Override
     public Graphml getDiseaseID(final String diseaseName, final Integer start, final Integer offset){
         try {
-            final String url = TCMGeneDIT + "disease/" + diseaseName;
+            final String url = TCMGeneDITID + "disease/" + diseaseName;
             final ArrayList<String> leaves = tcmInferDao.getDiseaseID("<" + url + ">", start, offset);
             final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "treatment", "edge#0", "G#0", "directed");
             return new Graphml(graph);

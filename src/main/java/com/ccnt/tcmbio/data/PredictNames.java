@@ -22,4 +22,6 @@ public class PredictNames {
 
     public static final String Rdfs_Label = "rdfs:label";
 
+    public static final String DiseaseOntologyPrefix = "http://www.w3.org/2004/02/skos/core#";
+
 }

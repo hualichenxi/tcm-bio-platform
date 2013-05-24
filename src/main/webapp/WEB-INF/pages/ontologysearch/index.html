@@ -19,8 +19,9 @@
 	<body>
 		<div class="navbar">
 			<div class="navbar-inner navbar-fixed-top">
-				<a class="brand" href="../entitysearch/index.html">TCM-BIO</a>
+				<a class="brand" href="../indexpage/index.html">TCM-BIO</a>
 				<ul class="nav">
+					<li><a href="../entitysearch/index.html">Search</a></li>
 					<li class="active"><a href="../ontologysearch/index.html">Ontology Search</a></li>
 					<li><a href="../termsearch/index.html">Term Search</a></li>
 					<li><a href="../mappingsearch/index.html">Mapping Search</a></li>
@@ -40,26 +41,26 @@
 			</div>
 		</div>
 		<div class="well well-large" style="margin: 0px 60px 30px 60px;">
-		<div class="span3 offset8">
-			<div class="form-search">
-				<input type="text" class="input-medium search-query" id="keyword">
-				<button class="btn" id="onto-search">Search</button>
+			<div class="span3 offset8">
+				<div class="form-search">
+					<input type="text" class="input-medium search-query" id="keyword">
+					<button class="btn" id="onto-search">Search</button>
+				</div>
 			</div>
-		</div>
-		<div style="margin: 0px 80px 30px 80px;">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>Ontology Name</th>
-						<th>Triple Number</th>
-						<th>Updata Time</th>
-						<th>Description</th>
-					</tr>
-				</thead>
-				<tbody id="ontologies-detail">
-				</tbody>
-			</table>
-		</div>
+			<div style="margin: 0px 80px 30px 80px;">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Ontology Name</th>
+							<th>Triple Number</th>
+							<th>Updata Time</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody id="ontologies-detail">
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</body>
 </html>

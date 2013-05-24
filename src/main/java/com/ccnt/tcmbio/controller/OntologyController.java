@@ -34,6 +34,14 @@ public class OntologyController {
         this.ontologyService = ontologyService;
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public String mainpage(){
+
+        LOGGER.debug("Reveived GET request: index page");
+
+        return "redirect:indexpage/index.html";
+    }
+
     @RequestMapping(value = "/v0.9/ontologies", method = RequestMethod.GET)
     public @ResponseBody String getAllOntologies() throws Exception{
 
