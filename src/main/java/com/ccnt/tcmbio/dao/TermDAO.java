@@ -16,9 +16,13 @@ import com.ccnt.tcmbio.data.TcmData;
 
 public interface TermDAO {
 
-    public ArrayList<DiseaseData> searchDisease(String keyword);
+    public ArrayList<DiseaseData> searchDisease(String keyword, final String start, final String offset);
 
-    public GeneData searchGene(String keyword);
+    public Integer searchDiseaseCount(String keyword);
+
+    public ArrayList<GeneData> searchGene(String keyword, final String start, final String offset);
+
+    public Integer searchGeneCount(String keyword);
 
     public ArrayList<TcmData> searchTCM(String keyword);
 

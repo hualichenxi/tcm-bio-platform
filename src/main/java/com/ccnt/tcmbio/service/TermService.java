@@ -8,7 +8,7 @@ package com.ccnt.tcmbio.service;
 
 import java.util.ArrayList;
 
-import com.ccnt.tcmbio.data.DiseaseData;
+import com.ccnt.tcmbio.data.DiseaseSearchData;
 import com.ccnt.tcmbio.data.DrugData;
 import com.ccnt.tcmbio.data.GeneData;
 import com.ccnt.tcmbio.data.ProteinData;
@@ -16,7 +16,7 @@ import com.ccnt.tcmbio.data.TcmData;
 
 public interface TermService {
 
-    public ArrayList<DiseaseData> searchDisease(String keyword);
+    public DiseaseSearchData searchDisease(String keyword, String start, String offset);
 
     public GeneData searchGene(String keyword);
 

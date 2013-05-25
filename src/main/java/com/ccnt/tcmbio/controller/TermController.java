@@ -6,8 +6,6 @@
 
 package com.ccnt.tcmbio.controller;
 
-import java.util.ArrayList;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ccnt.tcmbio.data.DiseaseData;
+import com.ccnt.tcmbio.data.DiseaseSearchData;
 import com.ccnt.tcmbio.data.DrugData;
 import com.ccnt.tcmbio.data.GeneData;
 import com.ccnt.tcmbio.data.ProteinData;
@@ -42,13 +40,14 @@ public class TermController {
         return null;
     }
 
-    @RequestMapping(value = "/v0.9/term/searchdisease/kw={keyword}", method = RequestMethod.GET)
-    public @ResponseBody ArrayList<DiseaseData> searchDisease(@PathVariable final String keyword) throws Exception{
+    @RequestMapping(value = "/v0.9/term/searchdisease/kw={keyword}&s={start}&o={offset}", method = RequestMethod.GET)
+    public @ResponseBody DiseaseSearchData searchDisease(@PathVariable final String keyword,
+            @PathVariable final String start, @PathVariable final String offset) throws Exception{
 
-        LOGGER.debug("Reveived GET request: ../v0.9/term/searchdisease/kw={}", keyword);
+        LOGGER.debug("Reveived GET request: ../v0.9/term/searchdisease/kw={}&s={}&o={}", keyword, start, offset);
 
         try {
-            return termService.searchDisease(keyword);
+            return termService.searchDisease(keyword,start, offset);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -18,6 +18,8 @@ public class Namespaces {
 
     public static final String GeneOntology = "http://purl.org/obo/owl/";
 
+    public static final String GeneOntologyGeneIDPrefix = "http://purl.obolibrary.org/obo/GO_";
+
     public static final String FunDODisease = "http://biotcmcloud.org/disease/";
 
     public static final String DrugBankDiseaseIDPrefix = "http://linkedlifedata.com/resource/diseaseontology/id/DOID:";

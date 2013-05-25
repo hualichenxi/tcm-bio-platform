@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.ccnt.tcmbio.dao.TermDAO;
 import com.ccnt.tcmbio.data.DiseaseData;
+import com.ccnt.tcmbio.data.DiseaseSearchData;
 import com.ccnt.tcmbio.data.DrugData;
 import com.ccnt.tcmbio.data.GeneData;
 import com.ccnt.tcmbio.data.ProteinData;
@@ -25,8 +26,14 @@ public class TermServiceImpl implements TermService{
     }
 
     @Override
-    public ArrayList<DiseaseData> searchDisease(final String keyword){
-        return termDAO.searchDisease(keyword);
+    public DiseaseSearchData searchDisease(final String keyword, final String start, final String offset){
+        final ArrayList<DiseaseData> datas = termDAO.searchDisease(keyword, start, offset);
+        final Integer count = termDAO.searchDiseaseCount(keyword);
+        final DiseaseSearchData diseaseSearchData = new DiseaseSearchData();
+        diseaseSearchData.setDiseaseDatas(datas);
+        diseaseSearchData.setResultCount(count);
+        diseaseSearchData.setLabel("Disease");
+        return diseaseSearchData;
     }
 
     @Override
