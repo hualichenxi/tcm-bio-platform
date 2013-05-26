@@ -40,15 +40,18 @@ var termsearch = {
 	searchDiseaseURL : '../v0.9/term/searchdisease/kw=',
 	searchGeneURL : '../v0.9/term/searchgene/kw=',
 	searchTCMURL : '../v0.9/term/searchtcm/kw=',
-	searchProteinURL : '../v0.9/term/searchprotein/kw=',
 	searchDrugURL : '../v0.9/term/searchdrug/kw=',
-	searchSynonymURL : '../v0.9/term/searchsynonym/kw=',
 	
 	start : 0,
 	offset : 10,
 	currPage : 0,
 	type : "",
 	totalNum : 0,
+	
+	//spin-progress-mark
+	spinCount : 0,
+	//fuzzy matched result count
+	resultCount : 0,
 	
 	spinopts : {
 		lines: 13, // The number of lines to draw
@@ -81,10 +84,39 @@ var termsearch = {
 		'relatedGene' : 'Related Gene'
 	},
 	
+	cardGeneSubTitle : {
+		'geneID' : 'Gene ID',
+		'definition' : 'Definition',
+		'synonym' : 'Synonym',
+		'ontology' : 'Ontology',
+		'relatedProteinSet' : 'Related Protein',
+		'relatedTCMSet' : 'Relate TCM',
+		'relatedDiseaseNameSet' : 'Related Disease'
+	},
+	
+	cardTCMSubTitle : {
+		// 'tcmName' : 'TCM Name',
+		'effect' : 'Effect',
+		'ingredient' : 'Ingredient',
+		'treatment' : 'Treatment',
+		'relatedGene' : 'Related Gene'
+	},
+	
+	cardDrugSubTitle : {
+		'state' : 'State',
+		'drugID' : 'Drug ID',
+		'brandName' : 'Brand Name',
+		'drugCategory' : 'Drug Category',
+		'mechanismOfAction' : 'Mechanism Of Action',
+		'pages' : 'pages',
+		'affectedPrganism' : 'Affected Organism',
+		'diseaseTarget' : 'Disease Target'
+	},
+	
 	getType : function() {
-		var type;
+		var type = "";
 		if($('#DiseaseCheckbox').prop('checked') == true){
-			type = "-1";
+			type += "-1";
 		}
 		if($('#GeneIDCheckbox').prop('checked') == true){
 			type += "-2";
@@ -97,6 +129,9 @@ var termsearch = {
 		}
 		if($('#DrugCheckbox').prop('checked') == true){
 			type += "-5"
+		}
+		if(type==""){
+			type += "-a";
 		}
 		return type;
 	},
@@ -113,8 +148,12 @@ var termsearch = {
 		
 		if(keyword!=undefined && type!=undefined){
 			for(var i=0; i<type.length; i++){
-				if (type[i] == 0) {
-					this.searchTerm(this.getURL(this.searchTermURL, keyword, start, offset));
+				if (type[i] == 'a') {
+					// this.searchTerm(this.getURL(this.searchTermURL, keyword, start, offset));
+					this.searchDisease(this.getURL(this.searchDiseaseURL, keyword, start, offset));
+					this.searchGene(this.getURL(this.searchGeneURL, keyword, start, offset));
+					this.searchTCM(this.getURL(this.searchTCMURL, keyword, start, offset));
+					
 				} else if (type[i] == 1) {
 					$('#DiseaseCheckbox').prop('checked', true);
 					this.searchDisease(this.getURL(this.searchDiseaseURL, keyword, start, offset));
@@ -145,56 +184,102 @@ var termsearch = {
 	
 	searchDisease : function(url){
 		commonjs.ajax("GET", url, "", "", this.displaySearchResult, commonjs.showErrorTip);
+		this.spinCount ++;
 		$('.spin-progress').spin(this.spinopts);
 	},
 	
 	searchGene : function(url){
-		
+		commonjs.ajax("GET", url, "", "", this.displaySearchResult, commonjs.showErrorTip);
+		this.spinCount ++;
+		$('.spin-progress').spin(this.spinopts);
 	},
 	
 	searchTCM : function(url){
-		
-	},
-	
-	searchProtein : function(url){
-		
+		commonjs.ajax("GET", url, "", "", this.displaySearchResult, commonjs.showErrorTip);
+		this.spinCount ++;
+		$('.spin-progress').spin(this.spinopts);
 	},
 	
 	searchDrug : function(url) {
-		
+		commonjs.ajax("GET", url, "", "", this.displaySearchResult, commonjs.showErrorTip);
+		this.spinCount ++;
+		$('.spin-progress').spin(this.spinopts);
 	},
 	
 	displaySearchResult : function(data, textStatus, jqXHR) {
-		$('.spin-progress').spin(false);
-		$('#total-or-fuzzytip').html("Total " + data.resultCount + " matched results.");
-		termsearch.totalNum = data.resultCount;
+		termsearch.spinCount --;
+		termsearch.resultCount += data.resultCount;
+		if(termsearch.spinCount==0){
+			$('.spin-progress').spin(false);
+			$('#total-or-fuzzytip').html("Total " + termsearch.resultCount + " matched results.");
+		}
+		
+		
+		termsearch.totalNum += data.resultCount;
 		if (data.resultCount!=0 && data.label=="Disease"){
 			for (var i=0; i<data.diseaseDatas.length; i++){
 				var title = termsearch.splitResource(data.diseaseDatas[i].diseaseName);
 				var category = data.label;
-				var listTitle1 = termsearch.splitResource("Related TCM");
+				var listTitle1 = "Related TCM";
 				var listContent1 = data.diseaseDatas[i].relatedTCM;
-				var listTitle2  = termsearch.splitResource("Related Gene");
+				var listTitle2  = "Related Gene";
 				var listContent2 = data.diseaseDatas[i].relatedGene;
-				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, i));
-				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.diseaseDatas[i], termsearch.cardDiseaseSubTitle, i));
+				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "dis", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.diseaseDatas[i], termsearch.cardDiseaseSubTitle, "dis", i));
 				
-				$('.pagination').pagination({
-					items : termsearch.totalNum/10,
-					currentPage : termsearch.currPage.split("-")[1],
-					onPageClick : function(pageNumber){
-						var keyword = $('#search-keyword').val();
-						window.open('index.html?t=' + termsearch.getType() + '&kw=' + keyword + "&s=" + (pageNumber-1) * termsearch.offset + "&o=" + termsearch.offset + "#page-" + pageNumber, "_self");
-					}
-				});
 				
 			}
-		}
+		} else if (data.resultCount!=0 && data.label=="Gene ID"){
+			for (var i=0; i<data.geneDatas.length; i++){
+				var title = termsearch.splitResource(data.geneDatas[i].geneID);
+				var category = data.label;
+				var listTitle1 = "Definition";
+				var listContent1 = data.geneDatas[i].definition;
+				var listTitle2  = "Related TCM";
+				var listContent2 = data.geneDatas[i].relatedTCMSet;
+				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "gene", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.geneDatas[i], termsearch.cardGeneSubTitle, "gene", i));
+				
+			}
+		} else if (data.resultCount!=0 && data.label=="TCM"){
+			for (var i=0; i<data.tcmDatas.length; i++){
+				var title = termsearch.splitResource(data.tcmDatas[i].tcmName);
+				var category = data.label;
+				var listTitle1 = "Effect";
+				var listContent1 = data.tcmDatas[i].effect;
+				var listTitle2  = "Other";
+				var listContent2 = "";
+				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "tcm", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.tcmDatas[i], termsearch.cardTCMSubTitle, "tcm", i));
+				
+			}
+		} else if (data.resultCount!=0 && data.label=="Drug"){
+			for (var i=0; i<data.drugDatas.length; i++){
+				var title = termsearch.splitResource(data.drugDatas[i].drugName);
+				var category = data.label;
+				var listTitle1 = "Description";
+				var listContent1 = data.drugDatas[i].description;
+				var listTitle2  = "Drug Category";
+				var listContent2 = data.drugDatas[i].drugCategory;
+				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.drugDatas[i], termsearch.cardDrugSubTitle, i));
+				
+			}
+		}// to do else if
 		
-		// to do else if
+		if(termsearch.spinCount==0){
+			$('.pagination').pagination({
+				items : termsearch.totalNum/10,
+				currentPage : termsearch.currPage.split("-")[1],
+				onPageClick : function(pageNumber){
+					var keyword = $('#search-keyword').val();
+					window.open('index.html?t=' + termsearch.getType() + '&kw=' + keyword + "&s=" + (pageNumber-1) * termsearch.offset + "&o=" + termsearch.offset + "#page-" + pageNumber, "_self");
+				}
+			});
+		}
 	},
 	
-	toHTMLRow : function(title, category, listTitle1, listContent1, listTitle2, listContent2, id){
+	toHTMLRow : function(title, category, listTitle1, listContent1, listTitle2, listContent2, catogory, id){
 		$('#result-row .term-title').html(title);
 		$('#result-row .term-category').html('[' + category + ']');
 		$('#result-row .term-shortlist1-title').html(listTitle1);
@@ -208,6 +293,8 @@ var termsearch = {
 					convertListContent1 += ', ';
 				}
 			}
+		} else {
+			convertListContent1 += listContent1;
 		}
 		if ($.isArray(listContent2)){
 			for (var i=0; i<listContent2.length; i++){
@@ -216,19 +303,21 @@ var termsearch = {
 					convertListContent2 += ', ';
 				}
 			}
+		} else {
+			convertListContent2 += listContent2;
 		}
 		$('#result-row .term-shortlist1-content').html(convertListContent1);
 		$('#result-row .term-shortlist2-content').html(convertListContent2);
 		
-		return '<div class="row-fluid result-set-left" id="result-row--' + id + '">' + $('#result-row').html() + '</div>';
+		return '<div class="row-fluid result-set-left" id="result-row--' + catogory + id + '">' + $('#result-row').html() + '</div>';
 		
 	},
 	
-	toHTMLCard : function(title, data, subTitles, id){
-		var html = '<div class="thumbnail hide result-card-class" id="result-card--' + id + '">' +
+	toHTMLCard : function(title, data, subTitles, catogory, id){
+		var html = '<div class="thumbnail hide result-card-class" id="result-card--' + catogory + id + '">' +
       					'<h3 class="term-card-title">' + title + '</h3><dl>';
 		for (var subTitle in subTitles){
-			if(!data[subTitle] || ($.isArray(data[subTitle]) && data[subTitle].length !=0)){
+			if(($.isArray(data[subTitle]) && data[subTitle].length !=0) || (!$.isArray(data[subTitle]) && data[subTitle])){
 				html += '<dt>' + subTitles[subTitle] + '</dt>';
 				html += '<dd>';
 				if ($.isArray(data[subTitle])){

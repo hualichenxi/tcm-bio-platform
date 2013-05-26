@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccnt.tcmbio.data.DiseaseSearchData;
-import com.ccnt.tcmbio.data.DrugData;
-import com.ccnt.tcmbio.data.GeneData;
-import com.ccnt.tcmbio.data.ProteinData;
-import com.ccnt.tcmbio.data.TcmData;
+import com.ccnt.tcmbio.data.DrugSearchData;
+import com.ccnt.tcmbio.data.GeneSearchData;
+import com.ccnt.tcmbio.data.TCMSearchData;
 import com.ccnt.tcmbio.service.TermService;
 
 @Controller
@@ -55,23 +54,49 @@ public class TermController {
         return null;
     }
 
-    @RequestMapping(value = "/v0.9/term/searchgene?kw={keyword}", method = RequestMethod.GET)
-    public @ResponseBody GeneData searchGene(@PathVariable final String keyword) throws Exception{
+    @RequestMapping(value = "/v0.9/term/searchgene/kw={keyword}&s={start}&o={offset}", method = RequestMethod.GET)
+    public @ResponseBody GeneSearchData searchGene(@PathVariable final String keyword,
+            @PathVariable final String start, @PathVariable final String offset) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/searchgene/kw={}&s={}&o={}", keyword, start, offset);
+
+        try {
+            return termService.searchGene(keyword, start, offset);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return null;
     }
 
-    @RequestMapping(value = "/v0.9/term/searchtcm?kw={keyword}", method = RequestMethod.GET)
-    public @ResponseBody TcmData searchTCM(@PathVariable final String keyword) throws Exception{
+    @RequestMapping(value = "/v0.9/term/searchtcm/kw={keyword}&s={start}&o={offset}", method = RequestMethod.GET)
+    public @ResponseBody TCMSearchData searchTCM(@PathVariable final String keyword,
+            @PathVariable final String start, @PathVariable final String offset) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/searchtcm/kw={}&s={}&o={}", keyword, start, offset);
+
+        try {
+            return termService.searchTCM(keyword, start, offset);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return null;
     }
 
-    @RequestMapping(value = "/v0.9/term/searchprotein?kw={keyword}", method = RequestMethod.GET)
-    public @ResponseBody ProteinData searchProtein(@PathVariable final String keyword) throws Exception{
-        return null;
-    }
+    @RequestMapping(value = "/v0.9/term/searchdrug/kw={keyword}&s={start}&o={offset}", method = RequestMethod.GET)
+    public @ResponseBody DrugSearchData searchDrug(@PathVariable final String keyword,
+            @PathVariable final String start, @PathVariable final String offset) throws Exception{
 
-    @RequestMapping(value = "/v0.9/term/searchdrug?kw={keyword}", method = RequestMethod.GET)
-    public @ResponseBody DrugData searchDrug(@PathVariable final String keyword) throws Exception{
+        LOGGER.debug("Reveived GET request: ../v0.9/term/searchtcm/kw={}&s={}&o={}", keyword, start, offset);
+
+        try {
+            return termService.searchDrug(keyword, start, offset);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         return null;
     }
 

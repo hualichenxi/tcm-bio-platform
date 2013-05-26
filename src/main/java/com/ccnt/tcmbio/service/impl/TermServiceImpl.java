@@ -12,9 +12,11 @@ import com.ccnt.tcmbio.dao.TermDAO;
 import com.ccnt.tcmbio.data.DiseaseData;
 import com.ccnt.tcmbio.data.DiseaseSearchData;
 import com.ccnt.tcmbio.data.DrugData;
+import com.ccnt.tcmbio.data.DrugSearchData;
 import com.ccnt.tcmbio.data.GeneData;
-import com.ccnt.tcmbio.data.ProteinData;
-import com.ccnt.tcmbio.data.TcmData;
+import com.ccnt.tcmbio.data.GeneSearchData;
+import com.ccnt.tcmbio.data.TCMData;
+import com.ccnt.tcmbio.data.TCMSearchData;
 import com.ccnt.tcmbio.service.TermService;
 
 public class TermServiceImpl implements TermService{
@@ -37,23 +39,36 @@ public class TermServiceImpl implements TermService{
     }
 
     @Override
-    public GeneData searchGene(final String keyword){
-        return null;
+    public GeneSearchData searchGene(final String keyword, final String start, final String offset){
+        final ArrayList<GeneData> geneDatas = termDAO.searchGene(keyword, start, offset);
+        final Integer count = termDAO.searchGeneCount(keyword);
+        final GeneSearchData geneSearchData = new GeneSearchData();
+        geneSearchData.setGeneDatas(geneDatas);
+        geneSearchData.setLabel("Gene ID");
+        geneSearchData.setResultCount(count);
+        return geneSearchData;
     }
 
     @Override
-    public ArrayList<TcmData> searchTCM(final String keyword){
-        return null;
+    public TCMSearchData searchTCM(final String keyword, final String start, final String offset){
+        final ArrayList<TCMData> tcmDatas = termDAO.searchTCM(keyword, start, offset);
+        final Integer count = termDAO.searchTcmCount(keyword);
+        final TCMSearchData tcmSearchData = new TCMSearchData();
+        tcmSearchData.setLabel("TCM");
+        tcmSearchData.setResultCount(count);
+        tcmSearchData.setTcmDatas(tcmDatas);
+        return tcmSearchData;
     }
 
     @Override
-    public ArrayList<ProteinData> searchProtein(final String keyword){
-        return null;
-    }
-
-    @Override
-    public ArrayList<DrugData> searchDrug(final String keyword){
-        return null;
+    public DrugSearchData searchDrug(final String keyword, final String start, final String offset){
+        final ArrayList<DrugData> drugDatas = termDAO.searchDrug(keyword, start, offset);
+        final Integer count = termDAO.searchDrugCount(keyword);
+        final DrugSearchData drugSearchData = new DrugSearchData();
+        drugSearchData.setDrugDatas(drugDatas);
+        drugSearchData.setLabel("Drug");
+        drugSearchData.setResultCount(count);
+        return drugSearchData;
     }
 
 }

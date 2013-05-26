@@ -6,24 +6,19 @@
 
 package com.ccnt.tcmbio.service;
 
-import java.util.ArrayList;
-
 import com.ccnt.tcmbio.data.DiseaseSearchData;
-import com.ccnt.tcmbio.data.DrugData;
-import com.ccnt.tcmbio.data.GeneData;
-import com.ccnt.tcmbio.data.ProteinData;
-import com.ccnt.tcmbio.data.TcmData;
+import com.ccnt.tcmbio.data.DrugSearchData;
+import com.ccnt.tcmbio.data.GeneSearchData;
+import com.ccnt.tcmbio.data.TCMSearchData;
 
 public interface TermService {
 
     public DiseaseSearchData searchDisease(String keyword, String start, String offset);
 
-    public GeneData searchGene(String keyword);
+    public GeneSearchData searchGene(String keyword, String start, String offset);
 
-    public ArrayList<TcmData> searchTCM(String keyword);
+    public TCMSearchData searchTCM(String keyword, String start, String offset);
 
-    public ArrayList<ProteinData> searchProtein(String keyword);
-
-    public ArrayList<DrugData> searchDrug(String keyword);
+    public DrugSearchData searchDrug(String keyword, String start, String offset);
 
 }

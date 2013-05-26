@@ -10,6 +10,8 @@ public class PredictNames {
 
     public static final String TCMGeneDIT_Treatment = "TCMGeneDIT:treatment";
 
+    public static final String TCMGeneDITPrefix = "http://purl.org/net/tcm/tcm.lifescience.ntu.edu.tw/";
+
     public static final String OWL_SameAs = "owl:sameAs";
 
     public static final String Diseasesome_PossibleDrug = "diseasesome:possibleDrug";
@@ -18,7 +20,7 @@ public class PredictNames {
 
     public static final String Drugbank_SwissprotId = "drugbank:swissprotId";
 
-    public static final String UniprotGO_ClassifiedWith = "uniprotGO:classifiedWith";
+    public static final String UniprotGO_ClassifiedWith = "http://purl.uniprot.org/core/classifiedWith";
 
     public static final String Rdfs_Label = "rdfs:label";
 

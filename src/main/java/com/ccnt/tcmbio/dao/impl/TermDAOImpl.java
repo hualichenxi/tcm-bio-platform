@@ -11,9 +11,12 @@ import static com.ccnt.tcmbio.data.GraphNames.DiseaseOntology;
 import static com.ccnt.tcmbio.data.GraphNames.Diseasome;
 import static com.ccnt.tcmbio.data.GraphNames.DrugBank;
 import static com.ccnt.tcmbio.data.GraphNames.FunDO;
-import static com.ccnt.tcmbio.data.GraphNames.Gene_Ontology;
+import static com.ccnt.tcmbio.data.GraphNames.Gene2GO;
+import static com.ccnt.tcmbio.data.GraphNames.GeneNameToIDMapping;
+import static com.ccnt.tcmbio.data.GraphNames.GeneOntology;
 import static com.ccnt.tcmbio.data.GraphNames.TCMGeneDIT;
 import static com.ccnt.tcmbio.data.GraphNames.Tcm_Diseasesome_Mapping;
+import static com.ccnt.tcmbio.data.GraphNames.Uniprot_Protein_GO;
 import static com.ccnt.tcmbio.data.Namespaces.DrugBankDiseaseIDPrefix;
 import static com.ccnt.tcmbio.data.Namespaces.FunDODisease;
 import static com.ccnt.tcmbio.data.Namespaces.GeneOntologyGeneIDPrefix;
@@ -24,6 +27,8 @@ import static com.ccnt.tcmbio.data.PredictNames.GOID;
 import static com.ccnt.tcmbio.data.PredictNames.GONamespace;
 import static com.ccnt.tcmbio.data.PredictNames.GOProduct;
 import static com.ccnt.tcmbio.data.PredictNames.GOSynonym;
+import static com.ccnt.tcmbio.data.PredictNames.TCMGeneDITPrefix;
+import static com.ccnt.tcmbio.data.PredictNames.UniprotGO_ClassifiedWith;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,8 +46,7 @@ import com.ccnt.tcmbio.dao.TermDAO;
 import com.ccnt.tcmbio.data.DiseaseData;
 import com.ccnt.tcmbio.data.DrugData;
 import com.ccnt.tcmbio.data.GeneData;
-import com.ccnt.tcmbio.data.ProteinData;
-import com.ccnt.tcmbio.data.TcmData;
+import com.ccnt.tcmbio.data.TCMData;
 //import static com.ccnt.tcmbio.data.GraphNames.Protein_Gene_Mapping;
 
 public class TermDAOImpl extends JdbcDaoSupport implements TermDAO{
@@ -210,40 +214,96 @@ public class TermDAOImpl extends JdbcDaoSupport implements TermDAO{
 
     @Override
     public ArrayList<GeneData> searchGene(final String keyword, final String start, final String offset){
-        final String sparql0 = "sparql select distinct ?geneID where {graph<" + Gene_Ontology + "> {" +
-        		GeneOntologyGeneIDPrefix + keyword + " ?p ?o}} limit(" + offset + ") offset(" + start + ")";
+        try {
+            final String sparql0 = "sparql select distinct ?geneID where {graph<" + GeneOntology + "> {?geneID ?p ?o " +
+            				"filter regex(?geneID, \"" + GeneOntologyGeneIDPrefix + ".*" + keyword + "\", \"i\")}} " +
+            						"limit(" + offset + ") offset(" + start + ")";
 
-        LOGGER.debug("search gene query virtuoso: {}", sparql0);
+            LOGGER.debug("query for geneID: {}", sparql0);
+            final List<Map<String, Object>> rows0 = getJdbcTemplate().queryForList(sparql0);
 
-        final List<Map<String, Object>> rows0 = getJdbcTemplate().queryForList(sparql0);
-        final ArrayList<GeneData> geneDatas = new ArrayList<GeneData>();
+            final ArrayList<GeneData> geneDatas = new ArrayList<GeneData>();
 
-        for (final Map<String, Object> row : rows0){
-            final String geneID = row.get("geneID").toString();
+            for (final Map<String, Object> row0 : rows0){
+                final String geneID = row0.get("geneID").toString();
 
-            final String sparql1 = "sparql select * where {graph<" + Gene_Ontology + "> {" +
-            		"<" + geneID + "> " + GODefinition + " ?definition . " +
-            		"<" + geneID + "> " + GOID + " ?geneID . " +
-            		"<" + geneID + "> " + GOSynonym + " ?synonym . " +
-            		"<" + geneID + "> " + GONamespace + " ?namespace . " +
-            		"<" + geneID + "> " + GOProduct + " ?product}}";
+                final String sparql1 = "sparql select * where {graph<" + GeneOntology + "> {" +
+                		"optional {<" + geneID + "> <" + GODefinition + "> ?definition} . " +
+                		"optional {<" + geneID + "> <" + GOID + "> ?geneID} . " +
+                		"optional {<" + geneID + "> <" + GOSynonym + "> ?synonym} . " +
+                		"optional {<" + geneID + "> <" + GONamespace + "> ?namespace} . " +
+                		"optional {<" + geneID + "> <" + GOProduct + "> ?product}}}";
 
-            final List<Map<String, Object>> rows2 = getJdbcTemplate().queryForList(sparql1);
-            final GeneData geneData = new GeneData();
-            final Set<String> synonymSet = new HashSet<String>();
-            final boolean flag = true;
-            for (final Map<String, Object> row2 : rows2){
-                if (flag) {
-                    geneData.setDefinition(row2.get("definition").toString());
-                    geneData.setGeneID(row2.get("geneID").toString());
-                    geneData.setGeneProduct(row2.get("product").toString());
-                    geneData.setOntology(row2.get("namespace").toString());
+                LOGGER.debug("query for gene detail: {}", sparql1);
+                final List<Map<String, Object>> rows1 = getJdbcTemplate().queryForList(sparql1);
+
+                final GeneData geneData = new GeneData();
+                final Set<String> synonymSet = new HashSet<String>();
+                boolean flag = true;
+                for (final Map<String, Object> row1 : rows1){
+                    if (flag) {
+                        if(row1.get("definition") != null){
+                            geneData.setDefinition(row1.get("definition").toString());
+                        }
+                        if(row1.get("geneID") != null){
+                            geneData.setGeneID(row1.get("geneID").toString());
+                        }
+                        if(row1.get("product") != null){
+                            geneData.setGeneProduct(row1.get("product").toString());
+                        }
+                        if(row1.get("namespace") != null){
+                            geneData.setOntology(row1.get("namespace").toString());
+                        }
+                        flag = false;
+                    }
+                    if(row1.get("synonym") != null){
+                        synonymSet.add(row1.get("synonym").toString());
+                    }
                 }
-                synonymSet.add(row2.get("synonym").toString());
-            }
-            geneData.setSynonym(synonymSet);
+                geneData.setSynonym(synonymSet);
 
-            // todo
+                final String sparql2 = "sparql select * where {graph<" + Uniprot_Protein_GO + "> {" +
+                		"?proteinID <" + UniprotGO_ClassifiedWith + "> <" + geneID + ">}}";
+
+                LOGGER.debug("query for protein: {}", sparql2);
+                final List<Map<String, Object>> rows2 = getJdbcTemplate().queryForList(sparql2);
+
+                final Set<String> proteinIDSet = new HashSet<String>();
+                for (final Map<String, Object> row2 : rows2){
+                    if(row2.get("proteinID")!=null){
+                        proteinIDSet.add(row2.get("proteinID").toString());
+                    }
+                }
+                geneData.setRelatedProteinSet(proteinIDSet);
+
+                final String sparql3 = "sparql select ?tcmName ?diseaseName where {" +
+                		"graph<" + Gene2GO + ">{?geneID TCMGeneDIT:association <" + geneID + ">} . " +
+                        "optional {graph<" + FunDO + ">{?diseaseName TCMGeneDIT:association ?geneID}} . " +
+                		"optional {graph<" + GeneNameToIDMapping + ">{?geneName owl:sameAs ?geneID}} . " +
+                		"optional {graph<" + TCMGeneDIT + "> {?tcmName TCMGeneDIT:association ?geneName}} }";
+
+                LOGGER.debug("query for tcm: {}", sparql3);
+                final List<Map<String, Object>> rows3 = getJdbcTemplate().queryForList(sparql3);
+
+                final Set<String> tcmSet = new HashSet<String>();
+                final Set<String> diseaseNameSet = new HashSet<String>();
+                for (final Map<String, Object> row3 : rows3){
+                    if (row3.get("tcmName")!=null) {
+                        tcmSet.add(row3.get("tcmName").toString());
+                    }
+                    if (row3.get("diseaseName")!=null) {
+                        diseaseNameSet.add(row3.get("diseaseName").toString());
+                    }
+                }
+                geneData.setRelatedTCMSet(tcmSet);
+                geneData.setRelatedDiseaseNameSet(diseaseNameSet);
+
+                geneDatas.add(geneData);
+            }
+            return geneDatas;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
         return null;
@@ -251,22 +311,346 @@ public class TermDAOImpl extends JdbcDaoSupport implements TermDAO{
 
     @Override
     public Integer searchGeneCount(final String keyword){
+        try {
+            final String sparql = "sparql select count(distinct ?geneID) where {graph<" + GeneOntology + "> {?geneID ?p ?o " +
+                    "filter regex(?geneID, \"" + GeneOntologyGeneIDPrefix + ".*" + keyword + "\", \"i\")}} ";
+
+            LOGGER.debug("query for fuzzy geneID count: {}", sparql);
+            return getJdbcTemplate().queryForInt(sparql);
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return 0;
     }
 
     @Override
-    public ArrayList<TcmData> searchTCM(final String keyword){
+    public ArrayList<TCMData> searchTCM(final String keyword, final String start, final String offset){
+
+        try {
+
+            final String sparql = "sparql select distinct ?tcmName where {graph<" + TCMGeneDIT + "> " +
+                    "{?tcmName ?p ?o " +
+                    "filter regex(?tcmName, \"" + TCMGeneDITID + "medicine/.*" + keyword.replace(" ", "_") + ".*\", \"i\")}} " +
+                    		"limit(" + offset + ") offset(" + start + ")";
+
+            LOGGER.debug("query for tcm: {}", sparql);
+            List<Map<String, Object>> rows0 = getJdbcTemplate().queryForList(sparql);
+            if (rows0.size()==0) {
+                String sparql0 = "sparql select distinct ?tcmName where {graph<" + TCMGeneDIT + "> " +
+                        "{?tcmName ?p ?o " +
+                        "filter regex(?tcmName, \"" + TCMGeneDITID + "medicine/.*(";
+
+                if(keyword.contains(" ")){
+                    final String[] kws = keyword.split(" ");
+                    for (final String kw : kws){
+                        sparql0 +=  kw;
+                        if(kw != kws[kws.length-1]){
+                            sparql0 += "|";
+                        }
+                    }
+                } else {
+                    sparql0 += keyword;
+                }
+                sparql0 += ").*\", \"i\")}} limit(" + offset + ") offset(" + start + ")";
+
+                LOGGER.debug("query for tcm: {}", sparql0);
+                rows0 = getJdbcTemplate().queryForList(sparql0);
+            }
+
+            final ArrayList<TCMData> tcmDatas = new ArrayList<TCMData>();
+
+            for (final Map<String, Object> row0 : rows0){
+                final String tcmName = row0.get("tcmName").toString();
+
+                final String sparql1 = "sparql select * where {graph<" + TCMGeneDIT + ">" +
+                		"{ <" + tcmName + "> <" + TCMGeneDITPrefix + "effect> ?effect }} ";
+                final String sparql2 = "sparql select * where {graph<" + TCMGeneDIT + "> " +
+                        "{ <" + tcmName + "> <" + TCMGeneDITPrefix + "treatment> ?disease }}";
+                final String sparql3 = "sparql select * where {graph<" + TCMGeneDIT + "> " +
+                        "{ <" + tcmName + "> <" + TCMGeneDITPrefix + "ingredient> ?ingredient }}";
+                final String sparql4 = "sparql select * where {graph<" + TCMGeneDIT + "> " +
+                        "{<" + tcmName + "> <" + TCMGeneDITPrefix + "association> ?gene }}";
+
+                final TCMData tcmData = new TCMData();
+                tcmData.setTcmName(tcmName);
+
+                final Set<String> effectSet = new HashSet<String>();
+                final Set<String> ingredientSet = new HashSet<String>();
+                final Set<String> diseaSet = new HashSet<String>();
+                final Set<String> geneSet = new HashSet<String>();
+
+                LOGGER.debug("query for tcm detail info: {}", sparql1);
+                final List<Map<String, Object>> rows1 = getJdbcTemplate().queryForList(sparql1);
+                for (final Map<String, Object> row1 : rows1){
+                    if (row1.get("effect") != null) {
+                        effectSet.add(row1.get("effect").toString());
+                    }
+                }
+
+                LOGGER.debug("query for tcm detail info: {}", sparql2);
+                final List<Map<String, Object>> rows2 = getJdbcTemplate().queryForList(sparql2);
+                for (final Map<String, Object> row : rows2){
+                    if (row.get("disease") != null) {
+                        diseaSet.add(row.get("disease").toString());
+                    }
+                }
+
+                LOGGER.debug("query for tcm detail info: {}", sparql3);
+                final List<Map<String, Object>> rows3 = getJdbcTemplate().queryForList(sparql3);
+                for (final Map<String, Object> row : rows3){
+                    if (row.get("ingredient") != null) {
+                        ingredientSet.add(row.get("ingredient").toString());
+                    }
+                }
+
+                LOGGER.debug("query for tcm detail info: {}", sparql4);
+                final List<Map<String, Object>> rows4 = getJdbcTemplate().queryForList(sparql4);
+                for (final Map<String, Object> row : rows4){
+                    if (row.get("gene") != null) {
+                        geneSet.add(row.get("gene").toString());
+                    }
+                }
+
+                tcmData.setEffect(effectSet);
+                tcmData.setIngredient(ingredientSet);
+                tcmData.setRelatedGene(diseaSet);
+                tcmData.setTreatment(diseaSet);
+                tcmDatas.add(tcmData);
+            }
+
+            return tcmDatas;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         return null;
     }
 
     @Override
-    public ArrayList<ProteinData> searchProtein(final String keyword){
+    public Integer searchTcmCount(final String keyword){
+
+        try {
+            Integer count = 0;
+
+            final String sparql0 = "sparql select count(distinct ?tcmName) as ?count where {graph<" + TCMGeneDIT + "> " +
+                    "{?tcmName ?p ?o " +
+                    "filter regex(?tcmName, \"" + TCMGeneDITID + "medicine/.*" + keyword + ".*\", \"i\")}}";
+            count = getJdbcTemplate().queryForInt(sparql0);
+
+            if (count==0) {
+                String sparql = "sparql select count(distinct ?tcmName) as ?count where {graph<" + TCMGeneDIT + "> " +
+                        "{?tcmName ?p ?o " +
+                        "filter regex(?tcmName, \"" + TCMGeneDITID + "medicine/.*(";
+
+                if(keyword.contains(" ")){
+                    final String[] kws = keyword.split(" ");
+                    for (final String kw : kws){
+                        sparql += kw;
+                        if(kw != kws[kws.length-1]){
+                            sparql += "|";
+                        }
+                    }
+                } else {
+                    sparql += keyword;
+                }
+                sparql += ").*\", \"i\")}}";
+
+                LOGGER.debug("query for tcm fuzzy count: {}", sparql);
+                count = getJdbcTemplate().queryForInt(sparql);
+            }
+
+            return count;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    @Override
+    public ArrayList<DrugData> searchDrug(final String keyword, final String start, final String offset){
+
+        try {
+
+            final String sparql = "sparql select distinct ?drugName ?drugID where {graph<" + DrugBank + ">" +
+                    "{?drugID rdfs:label ?drugName " +
+                    "filter regex(?drugName, \".*" + keyword + ".*\", \"i\")}} limit(" + offset + ") offset(" + start + ")";
+
+            LOGGER.debug("query for drug: {}", sparql);
+            List<Map<String, Object>> rows0 = getJdbcTemplate().queryForList(sparql);
+            if (rows0.size()==0) {
+                String sparql0 = "sparql select distinct ?drugName ?drugID where {graph<" + DrugBank + ">" +
+                        "{?drugID rdfs:label ?drugName " +
+                        "filter regex(?drugName, \".*(";
+
+                if(keyword.contains(" ")){
+                    final String[] kws = keyword.split(" ");
+                    for (final String kw : kws){
+                        sparql0 += kw + "|";
+                    }
+                    sparql0 += keyword.replace(" ", ".*");
+                } else {
+                    sparql0 += keyword;
+                }
+                sparql0 += ").*\", \"i\")}} limit(" + offset + ") offset(" + start + ")";
+
+                LOGGER.debug("query for drug: {}", sparql0);
+                rows0 = getJdbcTemplate().queryForList(sparql0);
+            }
+
+            final ArrayList<DrugData> drugDatas = new ArrayList<DrugData>();
+
+            for (final Map<String, Object> row0 : rows0){
+                final String drugID = row0.get("drugID").toString();
+                final String drugName = row0.get("drugName").toString();
+
+                final DrugData drugData = new DrugData();
+                drugData.setDrugID(drugID);
+                drugData.setDrugName(drugName);
+
+                final Set<String> brandName = new HashSet<String>();
+                final Set<String> drugCategory = new HashSet<String>();
+                final Set<String> pages = new HashSet<String>();
+                final Set<String> diseaseTarget = new HashSet<String>();
+
+                final String sparql1 = "sparql select * where {graph<" + DrugBank + ">{" +
+                		"<" + drugID + "> drugbank:state ?state}}";
+                final String sparql2 = "sparql select * where {graph<" + DrugBank + ">{" +
+                        "<" + drugID + "> drugbank:brandName ?brandName}}";
+                final String sparql3 = "sparql select * where {graph<" + DrugBank + ">{" +
+                        "<" + drugID + "> drugbank:description ?description}}";
+                final String sparql4 = "sparql select * where {graph<" + DrugBank + ">{" +
+                        "<" + drugID + "> drugbank:drugCategory ?drugCategory}}";
+                final String sparql5 = "sparql select * where {graph<" + DrugBank + ">{" +
+                        "<" + drugID + "> drugbank:mechanismOfAction  ?mechanismOfAction}}";
+                final String sparql6 = "sparql select * where {graph<" + DrugBank + ">{" +
+                        "<" + drugID + "> foaf:page ?pages}}";
+                final String sparql7 = "sparql select * where {graph<" + DrugBank + ">{" +
+                        "<" + drugID + "> drugbank:affectedOrganism ?affectedPrganism}}";
+                final String sparql8 = "sparql select * where {graph<" + DrugBank + ">{" +
+                        "<" + drugID + "> drugbank:possibleDiseaseTarget ?diseaseTarget}}";
+
+                LOGGER.debug("query for drug detail info: {}", sparql1);
+                final List<Map<String, Object>> rows1 = getJdbcTemplate().queryForList(sparql1);
+                for (final Map<String, Object> row : rows1){
+                    if(row.get("state")!=null){
+                        drugData.setState(row.get("state").toString());
+                    }
+                }
+
+                LOGGER.debug("query for drug detail info: {}", sparql2);
+                final List<Map<String, Object>> rows2 = getJdbcTemplate().queryForList(sparql2);
+                for (final Map<String, Object> row : rows2){
+                    if(row.get("brandName")!=null){
+                        brandName.add(row.get("brandName").toString());
+                    }
+                }
+                drugData.setBrandName(brandName);
+
+                LOGGER.debug("query for drug detail info: {}", sparql3);
+                final List<Map<String, Object>> rows3 = getJdbcTemplate().queryForList(sparql3);
+                for (final Map<String, Object> row : rows3){
+                    if(row.get("description")!=null){
+                        drugData.setDescription(row.get("description").toString());
+                    }
+                }
+
+                LOGGER.debug("query for drug detail info: {}", sparql4);
+                final List<Map<String, Object>> rows4 = getJdbcTemplate().queryForList(sparql4);
+                for (final Map<String, Object> row : rows4){
+                    if(row.get("drugCategory")!=null){
+                        drugCategory.add(row.get("drugCategory").toString());
+                    }
+                }
+                drugData.setDrugCategory(drugCategory);
+
+                LOGGER.debug("query for drug detail info: {}", sparql5);
+                final List<Map<String, Object>> rows5 = getJdbcTemplate().queryForList(sparql5);
+                for (final Map<String, Object> row : rows5){
+                    if(row.get("mechanismOfAction")!=null){
+                        drugData.setMechanismOfAction(row.get("mechanismOfAction").toString());
+                    }
+                }
+
+                LOGGER.debug("query for drug detail info: {}", sparql6);
+                final List<Map<String, Object>> rows6 = getJdbcTemplate().queryForList(sparql6);
+                for (final Map<String, Object> row : rows6){
+                    if(row.get("pages")!=null){
+                        pages.add(row.get("pages").toString());
+                    }
+                }
+                drugData.setPages(pages);
+
+                LOGGER.debug("query for drug detail info: {}", sparql7);
+                final List<Map<String, Object>> rows7 = getJdbcTemplate().queryForList(sparql7);
+                for (final Map<String, Object> row : rows7){
+                    if(row.get("affectedPrganism")!=null){
+                        drugData.setAffectedPrganism(row.get("affectedPrganism").toString());
+                    }
+                }
+
+                LOGGER.debug("query for drug detail info: {}", sparql8);
+                final List<Map<String, Object>> rows8 = getJdbcTemplate().queryForList(sparql8);
+                for (final Map<String, Object> row : rows8){
+                    if(row.get("diseaseTarget")!=null){
+                        diseaseTarget.add(row.get("diseaseTarget").toString());
+                    }
+                }
+                drugData.setDiseaseTarget(diseaseTarget);
+
+                drugDatas.add(drugData);
+            }
+            return drugDatas;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         return null;
     }
 
     @Override
-    public ArrayList<DrugData> searchDrug(final String keyword){
-        return null;
+    public Integer searchDrugCount(final String keyword){
+
+        try {
+            Integer count = 0;
+
+            final String sparql = "sparql select count(distinct ?drugID) where {graph<" + DrugBank + ">" +
+                    "{?drugID rdfs:label ?drugName " +
+                    "filter regex(?drugName, \".*" + keyword + ".*\", \"i\")}} ";
+
+            LOGGER.debug("query for drug: {}", sparql);
+            count = getJdbcTemplate().queryForInt(sparql);
+            if (count==0) {
+                String sparql0 = "sparql select count(distinct ?drugID) where {graph<" + DrugBank + ">" +
+                        "{?drugID rdfs:label ?drugName " +
+                        "filter regex(?drugName, \".*(";
+
+                if(keyword.contains(" ")){
+                    final String[] kws = keyword.split(" ");
+                    for (final String kw : kws){
+                        sparql0 += kw + "|";
+                    }
+                    sparql0 += keyword.replace(" ", ".*");
+                } else {
+                    sparql0 += keyword;
+                }
+                sparql0 += ").*\", \"i\")}} ";
+
+                LOGGER.debug("query for drug: {}", sparql0);
+                count = getJdbcTemplate().queryForInt(sparql0);
+            }
+
+            return count;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
 }
