@@ -27,6 +27,13 @@ $(function(){
 		// local search version
 		ontologysearch.localSearchOntology(keyword);
 	});
+	
+	$('#keyword').live('keypress', function(e){
+		if(e.keyCode==13){
+			var keyword = $('#keyword').val();
+			ontologysearch.localSearchOntology(keyword);
+		}
+	});
 });
 
 // ================= UTILITY FUNCTIONS =========================================

@@ -26,6 +26,13 @@ $(function(){
 		window.open("index.html?kw=" + keyword + "&s=" + tcminfer.start + "&o=" + tcminfer.offset, "_self");
 	});
 	
+	$('#tcm-keyword').live('keypress', function(e){
+		if(e.keyCode==13){
+			var keyword = $('#tcm-keyword').val();
+			window.open("index.html?kw=" + keyword + "&s=" + tcminfer.start + "&o=" + tcminfer.offset, "_self");
+		}
+	});
+	
 });
 
 // ================= UTILITY FUNCTIONS =========================================

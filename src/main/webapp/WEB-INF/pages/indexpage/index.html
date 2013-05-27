@@ -10,7 +10,7 @@
 		<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="../lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<!--application-->
-		<script src="entitysearch.js"></script>
+		<script src="indexpage.js"></script>
 		<link href="../lib/index.css" rel="stylesheet">
 	</head>
 	<body>
@@ -18,9 +18,9 @@
 			<div class="navbar-inner navbar-fixed-top">
 				<a class="brand" href="../indexpage/index.html">TCM-BIO</a>
 				<ul class="nav">
-					<li class="active"><a href="../entitysearch/index.html">Search</a></li>
+					<li><a href="../entitysearch/index.html">Search</a></li>
 					<li><a href="../ontologysearch/index.html">Ontology Search</a></li>
-					<li><a href="../termsearch/index.html">Term Search</a></li>
+					<li class="active"><a href="../termsearch/index.html">Term Search</a></li>
 					<li><a href="../mappingsearch/index.html">Mapping Search</a></li>
 					<li><a href="../tcminference/index.html">TCM Inference Search</a></li>
 				</ul>
@@ -32,9 +32,9 @@
 				<h1 class="text-center" style="margin-top: 200px; font-size: 80px">TCM-BIO</h1>
 				<p class="text-center" style="font-size: 20px; margin-top: 25px">Search Engine for Information Retrive of TCM and Biology Related Knowledge</p>
 			</div>
-			<div class="span9 offset4 form-inline" style="margin-top: 40px">
-				<input type="text" class="span6" placeholder="TCM, Disearse, Drug, Gene, Protein, ......">
-				<button class="btn" style="margin-top:-2px">Search</button>
+			<div class="span9 offset3 form-inline" style="margin-top: 40px;">
+				<input type="text" class="span6" style="margin-left: 30px" id="keyword" placeholder="TCM, Disease, Drug, Gene, Protein, ......">
+				<button class="btn" style="margin-top:-2px" id="keyword-btn">Search</button>
 			</div>
 		</div>		
 	</body>

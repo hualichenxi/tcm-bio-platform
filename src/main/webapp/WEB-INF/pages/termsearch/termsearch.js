@@ -32,6 +32,13 @@ $(function(){
 		window.open('index.html?t=' + termsearch.getType() + '&kw=' + keyword + '&s=' + termsearch.start + '&o=' + termsearch.offset, "_self");
 	});
 	
+	$('#search-keyword').live('keypress', function(e){
+		if(e.keyCode==13){
+			var keyword = $('#search-keyword').val();
+			window.open('index.html?t=' + termsearch.getType() + '&kw=' + keyword + '&s=' + termsearch.start + '&o=' + termsearch.offset, "_self");
+		}
+	});
+	
 });
 
 // ================= UTILITY FUNCTIONS =========================================

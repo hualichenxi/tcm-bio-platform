@@ -41,7 +41,7 @@ var commonjs = {
 	},
 	
 	showErrorTip : function(jqXHR, textStatus, errorThrown) {
-		alert("Sorry, something unexpected goes wrong, see the console for detail");
+		// alert("Sorry, something unexpected goes wrong, see the console for detail");
 		console.log(jqXHR);
 	},
 	
