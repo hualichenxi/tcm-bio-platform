@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.ccnt.tcmbio.dao.TcmInferDao;
 import com.ccnt.tcmbio.data.TcmInferData;
-import com.ccnt.tcmbio.data.TcmSearchData;
+import com.ccnt.tcmbio.data.TcmInferSearchData;
 import com.ccnt.tcmbio.data.graph.Graph;
 import com.ccnt.tcmbio.data.graph.Graphml;
 import com.ccnt.tcmbio.service.CreateGraphService;
@@ -41,11 +41,11 @@ public class TcmInferServiceImpl implements TcmInferService{
 
 
     @Override
-    public TcmSearchData getTcmInference(final String tcmName, final Integer start, final Integer offset){
+    public TcmInferSearchData getTcmInference(final String tcmName, final Integer start, final Integer offset){
 
         LOGGER.debug("get the tcm inference result");
         try {
-            final TcmSearchData tcmSearchData = new TcmSearchData();
+            final TcmInferSearchData tcmSearchData = new TcmInferSearchData();
 
             if (!searchTcm(tcmName)) {
                 tcmSearchData.setFuzzymatchTCM(fuzzyMatchTcm(tcmName));

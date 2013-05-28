@@ -9,12 +9,12 @@ package com.ccnt.tcmbio.service;
 import java.util.ArrayList;
 
 import com.ccnt.tcmbio.data.TcmInferData;
-import com.ccnt.tcmbio.data.TcmSearchData;
+import com.ccnt.tcmbio.data.TcmInferSearchData;
 import com.ccnt.tcmbio.data.graph.Graphml;
 
 public interface TcmInferService {
 
-    public TcmSearchData getTcmInference(String tcmName, Integer start, Integer offset);
+    public TcmInferSearchData getTcmInference(String tcmName, Integer start, Integer offset);
 
     public ArrayList<TcmInferData> getAndCacheTcmInference(String tcmName);
 

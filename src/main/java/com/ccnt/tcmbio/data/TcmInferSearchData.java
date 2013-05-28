@@ -8,7 +8,7 @@ package com.ccnt.tcmbio.data;
 
 import java.util.ArrayList;
 
-public class TcmSearchData {
+public class TcmInferSearchData {
 
     private boolean status;
 

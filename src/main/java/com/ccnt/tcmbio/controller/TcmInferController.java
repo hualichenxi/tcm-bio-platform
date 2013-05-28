@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ccnt.tcmbio.data.TcmSearchData;
+import com.ccnt.tcmbio.data.TcmInferSearchData;
 import com.ccnt.tcmbio.data.graph.Graphml;
 import com.ccnt.tcmbio.service.TcmInferService;
 
@@ -39,7 +39,7 @@ public class TcmInferController {
         LOGGER.debug("Received GET request: /v0.9/tcminfer/kw={}&s={}&o={}", tcmName, start, offset);
 
         try {
-            final TcmSearchData tcmSearchDatas = tcmInferService.getTcmInference(tcmName, start, offset);
+            final TcmInferSearchData tcmSearchDatas = tcmInferService.getTcmInference(tcmName, start, offset);
             final ObjectMapper objectMapper =  new ObjectMapper();
             return objectMapper.writeValueAsString(tcmSearchDatas);
         } catch (final Exception e) {
