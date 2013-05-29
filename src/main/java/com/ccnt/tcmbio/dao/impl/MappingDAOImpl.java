@@ -97,23 +97,59 @@ public class MappingDAOImpl extends JdbcDaoSupport implements MappingDAO{
 
     @Override
     public boolean insertMappingTriple(final String mappingGraphName, final String graphName, final Integer mappingCount){
-        final String sparql = "sparql insert in graph<" + mappingGraphName + "> {<" + graphName
-                                    + "> tcmbio:mappingcount " + mappingCount + " }";
-
-        LOGGER.debug("insertMappingTriple - query virtuoso: {}", sparql);
 
         try {
+            final String sparql0 = "sparql select * where{ graph<" + mappingGraphName + "> {<" + graphName
+                    + "> tcmbio:mappingcount ?mappingCount}}";
+
+            LOGGER.debug("check if mapping triple exist - query virtuoso: {}", sparql0);
+
+            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sparql0);
+
+            if (!rows.isEmpty()) {
+                for(final Map<String, Object> row : rows){
+                    final String count = row.get("mappingCount").toString();
+                    final String sparql1 = "sparql delete from <" + mappingGraphName + "> {<" + graphName
+                            + "> tcmbio:mappingcount " + count + "}";
+                    LOGGER.debug("delete mapping triple - query virtuoso: {}", sparql1);
+                    getJdbcTemplate().update(sparql1);
+                }
+            }
+
+            final String sparql = "sparql insert in graph<" + mappingGraphName + "> {<" + graphName
+                    + "> tcmbio:mappingcount " + mappingCount + " }";
+
+            LOGGER.debug("insertMappingTriple - query virtuoso: {}", sparql);
+
             getJdbcTemplate().update(sparql);
             return true;
         } catch (final DataAccessException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
         return false;
     }
 
     @Override
     public boolean insertMappingDetailTriple(final String mappingGraphName, final String graph1, final String graph2, final Integer mappingCount){
+
+        final String sparql0 = "sparql select * where{ graph<" + mappingGraphName + "> {<" + graph1
+                + "> tcmbio:mapping <" + graph2 + "> }}";
+
+        LOGGER.debug("check if mapping triple exist - query virtuoso: {}", sparql0);
+
+        final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sparql0);
+
+        if (!rows.isEmpty()) {
+            final String sparql1 = "sparql delete from <" + mappingGraphName + "> {<" + graph1
+                    + "> tcmbio:mapping <" + graph2 + "> }";
+
+            LOGGER.debug("delete mapping triple  - query virtuoso: {}", sparql1);
+
+            getJdbcTemplate().update(sparql1);
+        }
+
         final String sparql = "sparql insert in graph<" + mappingGraphName + "> {<" + graph1
                 + "> tcmbio:mapping <" + graph2 + "> }";
 
