@@ -20,6 +20,8 @@ public class GraphNames {
 
     public static final String Uniprot_Protein_GO = "http://localhost:8890/uniprot_protein_GO_mapping";
 
+    public static final String Uniprot_Protein_Entrez_ID = "http://localhost:8890/uniprot_protein_entrez_mapping";
+
     public static final String Gene_Ontology= "http://localhost:8890/gene_ontology";
 
     public static final String GeneOntology= "http://localhost:8890/GeneOntology";

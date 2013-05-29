@@ -14,6 +14,8 @@ import com.ccnt.tcmbio.data.DiseaseSearchData;
 import com.ccnt.tcmbio.data.DrugData;
 import com.ccnt.tcmbio.data.DrugSearchData;
 import com.ccnt.tcmbio.data.GeneData;
+import com.ccnt.tcmbio.data.GeneIDData;
+import com.ccnt.tcmbio.data.GeneIDSearchData;
 import com.ccnt.tcmbio.data.GeneSearchData;
 import com.ccnt.tcmbio.data.TCMData;
 import com.ccnt.tcmbio.data.TCMSearchData;
@@ -39,12 +41,12 @@ public class TermServiceImpl implements TermService{
     }
 
     @Override
-    public GeneSearchData searchGene(final String keyword, final String start, final String offset){
-        final ArrayList<GeneData> geneDatas = termDAO.searchGene(keyword, start, offset);
-        final Integer count = termDAO.searchGeneCount(keyword);
+    public GeneSearchData searchGOID(final String keyword, final String start, final String offset){
+        final ArrayList<GeneData> geneDatas = termDAO.searchGOID(keyword, start, offset);
+        final Integer count = termDAO.searchGOIDCount(keyword);
         final GeneSearchData geneSearchData = new GeneSearchData();
         geneSearchData.setGeneDatas(geneDatas);
-        geneSearchData.setLabel("Gene ID");
+        geneSearchData.setLabel("GO ID");
         geneSearchData.setResultCount(count);
         return geneSearchData;
     }
@@ -69,6 +71,17 @@ public class TermServiceImpl implements TermService{
         drugSearchData.setLabel("Drug");
         drugSearchData.setResultCount(count);
         return drugSearchData;
+    }
+
+    @Override
+    public GeneIDSearchData searchGeneID(final String keyword, final String start, final String offset){
+        final ArrayList<GeneIDData> geneIDDatas = termDAO.searchGeneID(keyword, start, offset);
+        final Integer count = termDAO.searchGeneIDCount(keyword);
+        final GeneIDSearchData geneIDSearchData = new GeneIDSearchData();
+        geneIDSearchData.setGeneIDDatas(geneIDDatas);
+        geneIDSearchData.setResultCount(count);
+        geneIDSearchData.setLabel("Gene ID");
+        return geneIDSearchData;
     }
 
 }

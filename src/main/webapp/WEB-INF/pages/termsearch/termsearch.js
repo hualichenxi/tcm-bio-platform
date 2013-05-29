@@ -45,7 +45,8 @@ $(function(){
 var termsearch = {
 	searchTermURL : '../v0.9/termsearch/kw=',
 	searchDiseaseURL : '../v0.9/term/searchdisease/kw=',
-	searchGeneURL : '../v0.9/term/searchgene/kw=',
+	searchGOIDURL : '../v0.9/term/searchgoid/kw=',
+	searchGeneIDURL : '../v0.9/term/searchgeneid/kw=',
 	searchTCMURL : '../v0.9/term/searchtcm/kw=',
 	searchDrugURL : '../v0.9/term/searchdrug/kw=',
 	
@@ -88,14 +89,22 @@ var termsearch = {
 		// 'relatedDrugID' : 'Related Drug ID',
 		'relatedDrugName' : 'Related Drug',
 		'relatedTCM' : 'Related TCM',
-		'relatedGene' : 'Related Gene'
+		'relatedGene' : 'Related Gene(GOID)'
 	},
 	
-	cardGeneSubTitle : {
-		'geneID' : 'Gene ID',
+	cardGOIDSubTitle : {
+		'geneID' : 'Gene Ontology ID',
 		'definition' : 'Definition',
 		'synonym' : 'Synonym',
 		'ontology' : 'Ontology',
+		'relatedProteinSet' : 'Related Protein',
+		'relatedTCMSet' : 'Relate TCM',
+		'relatedDiseaseNameSet' : 'Related Disease'
+	},
+	
+	cardGeneIDSubTitle : {
+		'geneID' : 'Gene ID',
+		'goID' : 'Related Gene Ontology ID',
 		'relatedProteinSet' : 'Related Protein',
 		'relatedTCMSet' : 'Relate TCM',
 		'relatedDiseaseNameSet' : 'Related Disease'
@@ -106,7 +115,7 @@ var termsearch = {
 		'effect' : 'Effect',
 		'ingredient' : 'Ingredient',
 		'treatment' : 'Treatment',
-		'relatedGene' : 'Related Gene'
+		'relatedGene' : 'Related Gene(GOID)'
 	},
 	
 	cardDrugSubTitle : {
@@ -125,8 +134,11 @@ var termsearch = {
 		if($('#DiseaseCheckbox').prop('checked') == true){
 			type += "-1";
 		}
-		if($('#GeneIDCheckbox').prop('checked') == true){
+		if($('#GOIDCheckbox').prop('checked') == true){
 			type += "-2";
+		}
+		if($('#GeneIDCheckbox').prop('checked') == true){
+			type += "-6";
 		}
 		if($('#TCMCheckbox').prop('checked') == true){
 			type += "-3"
@@ -158,15 +170,15 @@ var termsearch = {
 				if (type[i] == 'a') {
 					// this.searchTerm(this.getURL(this.searchTermURL, keyword, start, offset));
 					this.searchDisease(this.getURL(this.searchDiseaseURL, keyword, start, offset));
-					this.searchGene(this.getURL(this.searchGeneURL, keyword, start, offset));
+					this.searchGOID(this.getURL(this.searchGOIDURL, keyword, start, offset));
 					this.searchTCM(this.getURL(this.searchTCMURL, keyword, start, offset));
 					
 				} else if (type[i] == 1) {
 					$('#DiseaseCheckbox').prop('checked', true);
 					this.searchDisease(this.getURL(this.searchDiseaseURL, keyword, start, offset));
 				} else if (type[i] == 2) {
-					$('#GeneIDCheckbox').prop('checked', true);
-					this.searchGene(this.getURL(this.searchGeneURL, keyword, start, offset));
+					$('#GOIDCheckbox').prop('checked', true);
+					this.searchGOID(this.getURL(this.searchGOIDURL, keyword, start, offset));
 				} else if (type[i] == 3) {
 					$('#TCMCheckbox').prop('checked', true);
 					this.searchTCM(this.getURL(this.searchTCMURL, keyword, start, offset));
@@ -176,6 +188,9 @@ var termsearch = {
 				} else if (type[i] == 5) {
 					$('#DrugCheckbox').prop('checked', true);
 					this.searchDrug(this.getURL(this.searchDrugURL, keyword, start, offset));
+				} else if (type[i] == 6) {
+					$('#GeneIDCheckbox').prop('checked', true);
+					this.searchGeneID(this.getURL(this.searchGeneIDURL, keyword, start, offset));
 				} 
 			}
 		}
@@ -195,7 +210,13 @@ var termsearch = {
 		$('.spin-progress').spin(this.spinopts);
 	},
 	
-	searchGene : function(url){
+	searchGOID : function(url){
+		commonjs.ajax("GET", url, "", "", this.displaySearchResult, commonjs.showErrorTip);
+		this.spinCount ++;
+		$('.spin-progress').spin(this.spinopts);
+	},
+	
+	searchGeneID : function(url){
 		commonjs.ajax("GET", url, "", "", this.displaySearchResult, commonjs.showErrorTip);
 		this.spinCount ++;
 		$('.spin-progress').spin(this.spinopts);
@@ -236,7 +257,7 @@ var termsearch = {
 				
 				
 			}
-		} else if (data.resultCount!=0 && data.label=="Gene ID"){
+		} else if (data.resultCount!=0 && data.label=="GO ID"){
 			for (var i=0; i<data.geneDatas.length; i++){
 				var title = termsearch.splitResource(data.geneDatas[i].geneID);
 				var category = data.label;
@@ -244,8 +265,20 @@ var termsearch = {
 				var listContent1 = data.geneDatas[i].definition;
 				var listTitle2  = "Related TCM";
 				var listContent2 = data.geneDatas[i].relatedTCMSet;
-				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "gene", i));
-				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.geneDatas[i], termsearch.cardGeneSubTitle, "gene", i));
+				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "goid", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.geneDatas[i], termsearch.cardGOIDSubTitle, "goid", i));
+				
+			}
+		} else if (data.resultCount!=0 && data.label=="Gene ID"){
+			for (var i=0; i<data.geneIDDatas.length; i++){
+				var title = termsearch.splitResource(data.geneIDDatas[i].geneID);
+				var category = data.label;
+				var listTitle1 = "Related Protein";
+				var listContent1 = data.geneIDDatas[i].relatedProteinSet;
+				var listTitle2  = "Related TCM";
+				var listContent2 = data.geneIDDatas[i].relatedTCMSet;
+				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "geneid", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.geneIDDatas[i], termsearch.cardGeneIDSubTitle, "geneid", i));
 				
 			}
 		} else if (data.resultCount!=0 && data.label=="TCM"){

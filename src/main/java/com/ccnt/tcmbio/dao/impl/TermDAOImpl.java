@@ -16,9 +16,11 @@ import static com.ccnt.tcmbio.data.GraphNames.GeneNameToIDMapping;
 import static com.ccnt.tcmbio.data.GraphNames.GeneOntology;
 import static com.ccnt.tcmbio.data.GraphNames.TCMGeneDIT;
 import static com.ccnt.tcmbio.data.GraphNames.Tcm_Diseasesome_Mapping;
+import static com.ccnt.tcmbio.data.GraphNames.Uniprot_Protein_Entrez_ID;
 import static com.ccnt.tcmbio.data.GraphNames.Uniprot_Protein_GO;
 import static com.ccnt.tcmbio.data.Namespaces.DrugBankDiseaseIDPrefix;
 import static com.ccnt.tcmbio.data.Namespaces.FunDODisease;
+import static com.ccnt.tcmbio.data.Namespaces.GeneIDPrefix;
 import static com.ccnt.tcmbio.data.Namespaces.GeneOntologyGeneIDPrefix;
 import static com.ccnt.tcmbio.data.Namespaces.TCMGeneDITID;
 import static com.ccnt.tcmbio.data.PredictNames.DiseaseOntologyPrefix;
@@ -46,6 +48,7 @@ import com.ccnt.tcmbio.dao.TermDAO;
 import com.ccnt.tcmbio.data.DiseaseData;
 import com.ccnt.tcmbio.data.DrugData;
 import com.ccnt.tcmbio.data.GeneData;
+import com.ccnt.tcmbio.data.GeneIDData;
 import com.ccnt.tcmbio.data.TCMData;
 //import static com.ccnt.tcmbio.data.GraphNames.Protein_Gene_Mapping;
 
@@ -213,26 +216,26 @@ public class TermDAOImpl extends JdbcDaoSupport implements TermDAO{
     }
 
     @Override
-    public ArrayList<GeneData> searchGene(final String keyword, final String start, final String offset){
+    public ArrayList<GeneData> searchGOID(final String keyword, final String start, final String offset){
         try {
-            final String sparql0 = "sparql select distinct ?geneID where {graph<" + GeneOntology + "> {?geneID ?p ?o " +
-            				"filter regex(?geneID, \"" + GeneOntologyGeneIDPrefix + ".*" + keyword + "\", \"i\")}} " +
+            final String sparql0 = "sparql select distinct ?GOID where {graph<" + GeneOntology + "> {?GOID ?p ?o " +
+            				"filter regex(?GOID, \"" + GeneOntologyGeneIDPrefix + ".*" + keyword + "\", \"i\")}} " +
             						"limit(" + offset + ") offset(" + start + ")";
 
-            LOGGER.debug("query for geneID: {}", sparql0);
+            LOGGER.debug("query for GOID: {}", sparql0);
             final List<Map<String, Object>> rows0 = getJdbcTemplate().queryForList(sparql0);
 
             final ArrayList<GeneData> geneDatas = new ArrayList<GeneData>();
 
             for (final Map<String, Object> row0 : rows0){
-                final String geneID = row0.get("geneID").toString();
+                final String goID = row0.get("GOID").toString();
 
                 final String sparql1 = "sparql select * where {graph<" + GeneOntology + "> {" +
-                		"optional {<" + geneID + "> <" + GODefinition + "> ?definition} . " +
-                		"optional {<" + geneID + "> <" + GOID + "> ?geneID} . " +
-                		"optional {<" + geneID + "> <" + GOSynonym + "> ?synonym} . " +
-                		"optional {<" + geneID + "> <" + GONamespace + "> ?namespace} . " +
-                		"optional {<" + geneID + "> <" + GOProduct + "> ?product}}}";
+                		"optional {<" + goID + "> <" + GODefinition + "> ?definition} . " +
+                		"optional {<" + goID + "> <" + GOID + "> ?GOID} . " +
+                		"optional {<" + goID + "> <" + GOSynonym + "> ?synonym} . " +
+                		"optional {<" + goID + "> <" + GONamespace + "> ?namespace} . " +
+                		"optional {<" + goID + "> <" + GOProduct + "> ?product}}}";
 
                 LOGGER.debug("query for gene detail: {}", sparql1);
                 final List<Map<String, Object>> rows1 = getJdbcTemplate().queryForList(sparql1);
@@ -245,8 +248,8 @@ public class TermDAOImpl extends JdbcDaoSupport implements TermDAO{
                         if(row1.get("definition") != null){
                             geneData.setDefinition(row1.get("definition").toString());
                         }
-                        if(row1.get("geneID") != null){
-                            geneData.setGeneID(row1.get("geneID").toString());
+                        if(row1.get("GOID") != null){
+                            geneData.setGeneID(row1.get("GOID").toString());
                         }
                         if(row1.get("product") != null){
                             geneData.setGeneProduct(row1.get("product").toString());
@@ -263,7 +266,7 @@ public class TermDAOImpl extends JdbcDaoSupport implements TermDAO{
                 geneData.setSynonym(synonymSet);
 
                 final String sparql2 = "sparql select * where {graph<" + Uniprot_Protein_GO + "> {" +
-                		"?proteinID <" + UniprotGO_ClassifiedWith + "> <" + geneID + ">}}";
+                		"?proteinID <" + UniprotGO_ClassifiedWith + "> <" + goID + ">}}";
 
                 LOGGER.debug("query for protein: {}", sparql2);
                 final List<Map<String, Object>> rows2 = getJdbcTemplate().queryForList(sparql2);
@@ -277,7 +280,7 @@ public class TermDAOImpl extends JdbcDaoSupport implements TermDAO{
                 geneData.setRelatedProteinSet(proteinIDSet);
 
                 final String sparql3 = "sparql select ?tcmName ?diseaseName where {" +
-                		"graph<" + Gene2GO + ">{?geneID TCMGeneDIT:association <" + geneID + ">} . " +
+                		"graph<" + Gene2GO + ">{?geneID TCMGeneDIT:association <" + goID + ">} . " +
                         "optional {graph<" + FunDO + ">{?diseaseName TCMGeneDIT:association ?geneID}} . " +
                 		"optional {graph<" + GeneNameToIDMapping + ">{?geneName owl:sameAs ?geneID}} . " +
                 		"optional {graph<" + TCMGeneDIT + "> {?tcmName TCMGeneDIT:association ?geneName}} }";
@@ -310,12 +313,12 @@ public class TermDAOImpl extends JdbcDaoSupport implements TermDAO{
     }
 
     @Override
-    public Integer searchGeneCount(final String keyword){
+    public Integer searchGOIDCount(final String keyword){
         try {
-            final String sparql = "sparql select count(distinct ?geneID) where {graph<" + GeneOntology + "> {?geneID ?p ?o " +
-                    "filter regex(?geneID, \"" + GeneOntologyGeneIDPrefix + ".*" + keyword + "\", \"i\")}} ";
+            final String sparql = "sparql select count(distinct ?GOID) where {graph<" + GeneOntology + "> {?GOID ?p ?o " +
+                    "filter regex(?GOID, \"" + GeneOntologyGeneIDPrefix + ".*" + keyword + "\", \"i\")}} ";
 
-            LOGGER.debug("query for fuzzy geneID count: {}", sparql);
+            LOGGER.debug("query for fuzzy GOID count: {}", sparql);
             return getJdbcTemplate().queryForInt(sparql);
         } catch (final DataAccessException e) {
             // TODO Auto-generated catch block
@@ -650,6 +653,99 @@ public class TermDAOImpl extends JdbcDaoSupport implements TermDAO{
             e.printStackTrace();
         }
 
+        return 0;
+    }
+
+    @Override
+    public ArrayList<GeneIDData> searchGeneID(final String keyword, final String start, final String offset){
+        try {
+            final String sparql0 = "sparql select distinct ?geneID where {graph<" + Gene2GO + "> {?geneID ?p ?o " +
+                            "filter regex(?geneID, \"" + GeneIDPrefix + ".*" + keyword + "\", \"i\")}} " +
+                                    "limit(" + offset + ") offset(" + start + ")";
+
+            LOGGER.debug("query for geneID: {}", sparql0);
+            final List<Map<String, Object>> rows0 = getJdbcTemplate().queryForList(sparql0);
+
+            final ArrayList<GeneIDData> geneIDDatas = new ArrayList<GeneIDData>();
+
+            for (final Map<String, Object> row0 : rows0){
+                final String geneID = row0.get("geneID").toString();
+
+                final String sparql1 = "sparql select ?GOID where {graph<" + Gene2GO + "> {" +
+                        "<" + geneID + "> <" + TCMGeneDITPrefix + "association> ?GOID}}";
+
+                LOGGER.debug("query for related GOID: {}", sparql1);
+                final List<Map<String, Object>> rows1 = getJdbcTemplate().queryForList(sparql1);
+
+                final GeneIDData geneIDData = new GeneIDData();
+                geneIDData.setGeneID(geneID);
+                final Set<String> goIDSet = new HashSet<String>();
+
+                for (final Map<String, Object> row1 : rows1){
+                    if(row1.get("GOID") != null){
+                        goIDSet.add(row1.get("GOID").toString());
+                    }
+                }
+                geneIDData.setGoID(goIDSet);
+
+                final String sparql2 = "sparql select * where {graph<" + Uniprot_Protein_Entrez_ID + "> {" +
+                        "?proteinID <" + UniprotGO_ClassifiedWith + "> <" + geneID + ">}}";
+
+                LOGGER.debug("query for protein: {}", sparql2);
+                final List<Map<String, Object>> rows2 = getJdbcTemplate().queryForList(sparql2);
+
+                final Set<String> proteinIDSet = new HashSet<String>();
+                for (final Map<String, Object> row2 : rows2){
+                    if(row2.get("proteinID")!=null){
+                        proteinIDSet.add(row2.get("proteinID").toString());
+                    }
+                }
+                geneIDData.setRelatedProteinSet(proteinIDSet);
+
+                final String sparql3 = "sparql select ?tcmName ?diseaseName where {" +
+                        "optional {graph<" + FunDO + ">{?diseaseName TCMGeneDIT:association <" + geneID + ">}} . " +
+                        "optional {graph<" + GeneNameToIDMapping + ">{?geneName owl:sameAs <" + geneID + ">}} . " +
+                        "optional {graph<" + TCMGeneDIT + "> {?tcmName TCMGeneDIT:association ?geneName}} }";
+
+                LOGGER.debug("query for tcm and diseaseName: {}", sparql3);
+                final List<Map<String, Object>> rows3 = getJdbcTemplate().queryForList(sparql3);
+
+                final Set<String> tcmSet = new HashSet<String>();
+                final Set<String> diseaseNameSet = new HashSet<String>();
+                for (final Map<String, Object> row3 : rows3){
+                    if (row3.get("tcmName")!=null) {
+                        tcmSet.add(row3.get("tcmName").toString());
+                    }
+                    if (row3.get("diseaseName")!=null) {
+                        diseaseNameSet.add(row3.get("diseaseName").toString());
+                    }
+                }
+                geneIDData.setRelatedTCMSet(tcmSet);
+                geneIDData.setRelatedDiseaseNameSet(diseaseNameSet);
+
+                geneIDDatas.add(geneIDData);
+            }
+            return geneIDDatas;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public Integer searchGeneIDCount(final String keyword){
+        try {
+            final String sparql0 = "sparql select count(distinct ?geneID) where {graph<" + Gene2GO + "> {?geneID ?p ?o " +
+                    "filter regex(?geneID, \"" + GeneIDPrefix + ".*" + keyword + "\", \"i\")}}";
+
+            LOGGER.debug("query for geneID count: {}", sparql0);
+            return getJdbcTemplate().queryForInt(sparql0);
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return 0;
     }
 
