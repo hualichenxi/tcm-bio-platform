@@ -49,6 +49,7 @@ var termsearch = {
 	searchGeneIDURL : '../v0.9/term/searchgeneid/kw=',
 	searchTCMURL : '../v0.9/term/searchtcm/kw=',
 	searchDrugURL : '../v0.9/term/searchdrug/kw=',
+	searchProteinURL : '../v0.9/term/searchprotein/kw=',
 	
 	start : 0,
 	offset : 10,
@@ -129,6 +130,11 @@ var termsearch = {
 		'diseaseTarget' : 'Disease Target'
 	},
 	
+	cardProteinSubTitle : {
+		'relatedGOID' : 'Related GOID',
+		'relatedGeneID' : 'Related GeneID'
+	},
+	
 	getType : function() {
 		var type = "";
 		if($('#DiseaseCheckbox').prop('checked') == true){
@@ -172,7 +178,9 @@ var termsearch = {
 					this.searchDisease(this.getURL(this.searchDiseaseURL, keyword, start, offset));
 					this.searchGOID(this.getURL(this.searchGOIDURL, keyword, start, offset));
 					this.searchTCM(this.getURL(this.searchTCMURL, keyword, start, offset));
-					
+					this.searchDrug(this.getURL(this.searchDrugURL, keyword, start, offset));
+					this.searchGeneID(this.getURL(this.searchGeneIDURL, keyword, start, offset));
+					this.searchProtein(this.getURL(this.searchProteinURL, keyword, start, offset));
 				} else if (type[i] == 1) {
 					$('#DiseaseCheckbox').prop('checked', true);
 					this.searchDisease(this.getURL(this.searchDiseaseURL, keyword, start, offset));
@@ -229,6 +237,12 @@ var termsearch = {
 	},
 	
 	searchDrug : function(url) {
+		commonjs.ajax("GET", url, "", "", this.displaySearchResult, commonjs.showErrorTip);
+		this.spinCount ++;
+		$('.spin-progress').spin(this.spinopts);
+	},
+	
+	searchProtein : function(url) {
 		commonjs.ajax("GET", url, "", "", this.displaySearchResult, commonjs.showErrorTip);
 		this.spinCount ++;
 		$('.spin-progress').spin(this.spinopts);
@@ -305,7 +319,19 @@ var termsearch = {
 				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.drugDatas[i], termsearch.cardDrugSubTitle, i));
 				
 			}
-		}// to do else if
+		} else if (data.resultCount!=0 && data.label=="Protein"){
+			for (var i=0; i<data.proteinDatas.length; i++){
+				var title = termsearch.splitResource(data.proteinDatas[i].proteinAC);
+				var category = data.label;
+				var listTitle1 = "Related Gene ID";
+				var listContent1 = data.proteinDatas[i].relatedGeneID;
+				var listTitle2  = "Other";
+				var listContent2 = "";
+				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.proteinDatas[i], termsearch.cardProteinSubTitle, i));
+				
+			}
+		}
 		
 		if(termsearch.spinCount==0){
 			$('.pagination').pagination({

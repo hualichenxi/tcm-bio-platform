@@ -19,6 +19,7 @@ import com.ccnt.tcmbio.data.DiseaseSearchData;
 import com.ccnt.tcmbio.data.DrugSearchData;
 import com.ccnt.tcmbio.data.GeneIDSearchData;
 import com.ccnt.tcmbio.data.GeneSearchData;
+import com.ccnt.tcmbio.data.ProteinSearchData;
 import com.ccnt.tcmbio.data.TCMSearchData;
 import com.ccnt.tcmbio.service.TermService;
 
@@ -109,6 +110,21 @@ public class TermController {
 
         try {
             return termService.searchGeneID(keyword, start, offset);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/term/searchprotein/kw={keyword}&s={start}&o={offset}", method = RequestMethod.GET)
+    public @ResponseBody ProteinSearchData searchProtin(@PathVariable final String keyword,
+            @PathVariable final String start, @PathVariable final String offset) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/searchprotein/kw={}&s={}&o={}", keyword, start, offset);
+
+        try {
+            return termService.searchProteinAC(keyword, start, offset);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

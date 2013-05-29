@@ -24,7 +24,6 @@
 			<div class="navbar-inner navbar-fixed-top">
 				<a class="brand" href="../indexpage/index.html">TCM-BIO</a>
 				<ul class="nav">
-					<li><a href="../entitysearch/index.html">Search</a></li>
 					<li><a href="../ontologysearch/index.html">Ontology Search</a></li>
 					<li class="active"><a href="index.html">Term Search</a></li>
 					<li><a href="../mappingsearch/index.html">Mapping Search</a></li>
@@ -44,7 +43,7 @@
 			</div>
 		</div>
 		<div class="form-inline" style="margin: 0px 60px 0px 60px;">
-			<input type="text" class="span5" id="search-keyword" placeholder="Disease，Gene，TCM, Drug"/>
+			<input type="text" class="span5" id="search-keyword" placeholder="Disease，Gene ID, GO ID, Protein，TCM, Drug"/>
 			<button class="btn" id="search-btn">Search</button>
 			<span class="help-inline" id="total-or-fuzzytip">
 		</div>
@@ -61,12 +60,12 @@
 			<label class="checkbox inline">
 				<input type="checkbox" id="TCMCheckbox" value="option3"> TCM
 			</label>
-			<!--label class="checkbox inline">
-				<input type="checkbox" id="ProteinCheckbox" value="option4"> Protein
-			</label-->	
 			<label class="checkbox inline">
 				<input type="checkbox" id="DrugCheckbox" value="option5"> Drug
 			</label>
+			<label class="checkbox inline">
+				<input type="checkbox" id="ProteinCheckbox" value="option6"> Protein
+			</label>	
 			<!--label class="checkbox inline">
 				<input type="checkbox" id="SynonymCheckbox" value="option6"> Synonym
 			</label-->
