@@ -91,7 +91,7 @@ public class TcmInferServiceImpl implements TcmInferService{
         try {
             final String url = TCMGeneDITID + "medicine/" + tcmName;
             final ArrayList<String> leaves = tcmInferDao.getDiseaseName("<" + url + ">", start, offset);
-            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "treatment", "edge#0", "G#0", "directed");
+            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "treatment", "edge#0", "G#0", "directed", "0", "1");
             return new Graphml(graph);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
@@ -105,7 +105,7 @@ public class TcmInferServiceImpl implements TcmInferService{
         try {
             final String url = TCMGeneDITID + "disease/" + diseaseName;
             final ArrayList<String> leaves = tcmInferDao.getDiseaseID("<" + url + ">", start, offset);
-            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "treatment", "edge#0", "G#0", "directed");
+            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "treatment", "edge#0", "G#0", "directed" ,"1", "2");
             return new Graphml(graph);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
@@ -119,7 +119,7 @@ public class TcmInferServiceImpl implements TcmInferService{
         try {
             final String url = DiseaseSome + "diseases/" + diseaseID;
             final ArrayList<String> leaves = tcmInferDao.getDrugID("<" + url + ">", start, offset);
-            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "possibleDrug", "edge#0", "G#0", "directed");
+            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "possibleDrug", "edge#0", "G#0", "directed" ,"2", "3");
             return new Graphml(graph);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
@@ -133,7 +133,7 @@ public class TcmInferServiceImpl implements TcmInferService{
         try {
             final String url = DrugBank + "drugs/" + drugID;
             final ArrayList<String> leaves = tcmInferDao.getTargetID("<" + url + ">", start, offset);
-            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "target", "edge#0", "G#0", "directed");
+            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "target", "edge#0", "G#0", "directed", "3", "4");
             return new Graphml(graph);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
@@ -147,7 +147,7 @@ public class TcmInferServiceImpl implements TcmInferService{
         try {
             final String url = DrugBank + "targets/" + targetID;
             final ArrayList<String> leaves = tcmInferDao.getProtein("<" + url + ">", start, offset);
-            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "swissprotId", "edge#0", "G#0", "directed");
+            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "swissprotId", "edge#0", "G#0", "directed", "4", "5");
             return new Graphml(graph);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
@@ -161,7 +161,7 @@ public class TcmInferServiceImpl implements TcmInferService{
         try {
             final String url = UNIPROT + protein;
             final ArrayList<String> leaves = tcmInferDao.getGeneID("<" + url + ">", start, offset);
-            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "classifiedWith", "edge#0", "G#0", "directed");
+            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "classifiedWith", "edge#0", "G#0", "directed" ,"5", "6");
             return new Graphml(graph);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
@@ -175,7 +175,7 @@ public class TcmInferServiceImpl implements TcmInferService{
         try {
             final String url = GeneOntology + geneID;
             final ArrayList<String> leaves = tcmInferDao.getGeneProduct("<" + url + ">", start, offset);
-            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "label", "edge#0", "G#0", "directed");
+            final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "label", "edge#0", "G#0", "directed" ,"6", "7");
             return new Graphml(graph);
         } catch (final Exception e) {
             // TODO Auto-generated catch block

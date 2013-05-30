@@ -14,6 +14,6 @@ public interface CreateGraphService {
 
     public Graph createGraph(String root, ArrayList<String> leaves, String rootID,
             Boolean rootExist, String leafStartID, String edgeName, String edgeStartID,
-            String graphID, String edgedefault);
+            String graphID, String edgedefault, String rootType, String leafType);
 
 }

@@ -136,10 +136,24 @@ var tcminferVisualization={
 	//visualization style
 	vstyle : {
 		global:{
-			backgroundColor: "#CCCCCC"
+			backgroundColor: "#DDDDDD"
 		},
 		nodes:{
-			color:"#0099ff",
+			color:{
+				discreteMapper: {
+                    attrName: "node-type",
+                    entries: [
+                        { attrValue: "0", value: "#333333" },
+                        { attrValue: "1", value: "#006600" },
+                        { attrValue: "2", value: "#00FF00" },
+                        { attrValue: "3", value: "#0000FF" },
+                        { attrValue: "4", value: "#FFFF00" },
+                        { attrValue: "5", value: "#00FFFF" },
+                        { attrValue: "6", value: "#FF00FF" },
+                        { attrValue: "7", value: "#FF0000" },
+                    ]
+                }
+			},
 			tooltipText: "${node-name}"
 		},
 		edges:{
@@ -147,7 +161,7 @@ var tcminferVisualization={
 			sytle:"SOLID",
 			Opacity:1,
 			color:"#011e59",
-			width:1.5
+			width:1
 		}
 	},
 	// initialization options

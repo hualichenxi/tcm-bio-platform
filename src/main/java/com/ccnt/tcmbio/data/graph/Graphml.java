@@ -17,6 +17,7 @@ public class Graphml {
 
     private static ArrayList<Key> key = new ArrayList<Key>(Arrays.asList(
     		new Key("label",  "all", "label", "string"),
+    		new Key("node-type",  "node", "node-type", "string"),
             new Key("k-node", "node", "node-name", "string"),
             new Key("k-edge", "edge", "edge-name", "string")));
 
