@@ -26,7 +26,9 @@ public class CreateGraphServiceImpl implements CreateGraphService{
             final ArrayList<Edge> edges = new ArrayList<Edge>();
 
             if (!rootExist){
-                final Data data = new Data("k-node", root);
+                final Data[] data = new Data[2];
+                data[0]=new Data("k-node", root);
+                data[1]=new Data("label",root.substring(root.lastIndexOf("/")+1));
                 final Node node = new Node(rootID, data);
                 nodes.add(node);
             }
@@ -40,11 +42,15 @@ public class CreateGraphServiceImpl implements CreateGraphService{
                 final String leafID = leafHeader + '#' + leafIDInteger.toString();
                 final String edgeID = edgeHeader + '#' + edgeIDInteger.toString();
 
-                final Data nodeData = new Data("k-node", leaf);
+                final Data[] nodeData = new Data[2];
+                nodeData[0] = new Data("k-node", leaf);
+                nodeData[1] = new Data("label",leaf.substring(leaf.lastIndexOf("/")+1));
                 final Node node = new Node(leafID, nodeData);
                 nodes.add(node);
-
-                final Data edgeData =  new Data("k-edge", edgeName);
+                
+                final Data[] edgeData= new Data[2];
+                edgeData[0] = new Data("k-edge", edgeName);
+                edgeData[1] = new Data("label",edgeName.substring(edgeName.lastIndexOf("/")+1));
                 final Edge edge = new Edge(rootID, leafID, edgeID, edgeData);
                 edges.add(edge);
 

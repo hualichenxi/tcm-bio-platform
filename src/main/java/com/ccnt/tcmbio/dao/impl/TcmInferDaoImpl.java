@@ -229,7 +229,7 @@ public class TcmInferDaoImpl extends JdbcDaoSupport implements TcmInferDao{
     public ArrayList<String> getGeneID(final String protein, final Integer start, final Integer offset){
 
         final String sparql = "sparql select * from <" + Protein_Gene_Mapping + "> where {"
-                + protein + " " + UniprotGO_ClassifiedWith + " ?geneID}";
+                + protein + " <" + UniprotGO_ClassifiedWith + "> ?geneID}";
 
         LOGGER.debug("getGeneID - query virtuoso: {}", sparql);
 

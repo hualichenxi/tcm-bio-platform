@@ -19,6 +19,7 @@ $(function(){
 		$('#tcm-keyword').val(keyword);
 		var url = tcminfer.getUrl(keyword, start, offset);
 		tcminfer.getTcmInfer(url);
+		tcminferVisualization.displaytcm.display(keyword);
 	}
 	
 	$("#tcm-search").live('click', function(){
@@ -123,4 +124,206 @@ var tcminfer = {
 		return '<tr>' + $('#tab2-table-sample-row').html() + '</tr>';
 	}
 		
-}
+};
+
+
+// ==============        visualization         ==============================
+var tcminferVisualization={
+	vstate : "",
+	selectNode: "",
+	selectId: "",
+	vDivid : "visual-div",
+	//visualization style
+	vstyle : {
+		global:{
+			backgroundColor: "#CCCCCC"
+		},
+		nodes:{
+			color:"#0099ff",
+			tooltipText: "${node-name}"
+		},
+		edges:{
+			tooltipText:"${label}",
+			sytle:"SOLID",
+			Opacity:1,
+			color:"#011e59",
+			width:1.5
+		}
+	},
+	// initialization options
+	voptions : {
+		// where you have the Cytoscape Web SWF
+		swfPath: "../lib/cytoscapeweb/swf/CytoscapeWeb",
+		// where you have the Flash installer SWF
+		flashInstallerPath: "../lib/cytoscapeweb/swf/playerProductInstall"
+	},
+	// init and draw
+	drawgraph : function(data){
+		var vis = new org.cytoscapeweb.Visualization( this.vDivid, this.voptions);
+		vis.ready(function(){
+			vis.addListener("click", "nodes", function(event) {
+                handle_click(event);
+            });
+			function handle_click(event) {
+                var target = event.target;
+                tcminferVisualization.selectNode = event.target.data.label;
+                tcminferVisualization.selectId = event.target.data.id;
+                $("#vselectnode").val(tcminferVisualization.selectNode);
+           }
+		});
+		vis.draw({ network: data, visualStyle: this.vstyle, nodeTooltipsEnabled: true,edgeTooltipsEnabled: true});
+	},
+	clearSelect : function(){
+		$("#vselectnode").val("");
+		tcminferVisualization.selectId="";
+		tcminferVisualization.selectNode="";
+	},
+	displaytcm :{ 
+		word : "",
+		display : function(keyword){
+			this.word = keyword;
+			tcminferVisualization.vstate = "tcm";
+			var htmlobj=$.ajax({url:"../v0.9/tcminfer/tcm2disease/kw="+keyword+"&s=-1&o=0",async:false});
+			tcminferVisualization.drawgraph(htmlobj.responseText);
+			tcminferVisualization.clearSelect();
+			$("#vback").unbind("click");
+			$("#vback").attr("disable",true);
+			$("#vgo").unbind("click");
+			$("#vgo").click( function(){
+				if(tcminferVisualization.selectId==""){
+				}
+				else if(tcminferVisualization.selectId!="node#0"){
+					tcminferVisualization.displaydiseasename.display(tcminferVisualization.selectNode);
+				}
+			});
+		}
+	},
+	displaydiseasename :{
+		word : "",
+		display : function(keyword){
+			this.word=keyword;
+			tcminferVisualization.vstate="diseasename";
+			var htmlobj=$.ajax({url:"../v0.9/tcminfer/disname2disid/kw="+keyword+"&s=-1&o=0",async:false});
+			tcminferVisualization.drawgraph(htmlobj.responseText);
+			tcminferVisualization.clearSelect();
+			$('#vback').removeAttr("disabled");
+			$("#vback").unbind("click");
+			$("#vback").click(  function(){
+				tcminferVisualization.displaytcm.display(tcminferVisualization.displaytcm.word);
+			});
+			$("#vgo").unbind("click");
+			$("#vgo").click( function(){
+				if(tcminferVisualization.selectId==""){
+				}
+				else if(tcminferVisualization.selectId!="node#0"){
+					tcminferVisualization.displaydiseaseid.display(tcminferVisualization.selectNode);
+				}
+			});
+		}
+	},
+	displaydiseaseid :{
+		word : "",
+		display : function(keyword){
+			this.word=keyword;
+			tcminferVisualization.vstate="diseaseid";
+			var htmlobj=$.ajax({url:"../v0.9/tcminfer/disid2drugid/kw="+keyword+"&s=-1&o=0",async:false});
+			tcminferVisualization.drawgraph(htmlobj.responseText);
+			tcminferVisualization.clearSelect();
+			$("#vback").unbind("click");
+			$("#vback").click(  function(){
+				tcminferVisualization.displaydiseasename.display(tcminferVisualization.displaydiseasename.word);
+			});
+			$("#vgo").unbind("click");
+			$("#vgo").click( function(){
+				if(tcminferVisualization.selectId==""){
+				}
+				else if(tcminferVisualization.selectId!="node#0"){
+					tcminferVisualization.displaydrugid.display(tcminferVisualization.selectNode);
+				}
+			});
+		}
+	},
+	displaydrugid : {
+		word : "",
+		display : function(keyword){
+			this.word=keyword;
+			tcminferVisualization.vstate="drugid";
+			var htmlobj=$.ajax({url:"../v0.9/tcminfer/drugid2targetid/kw="+keyword+"&s=-1&o=0",async:false});
+			tcminferVisualization.drawgraph(htmlobj.responseText);
+			tcminferVisualization.clearSelect();
+			$("#vback").unbind("click");
+			$("#vback").click(  function(){
+				tcminferVisualization.displaydiseaseid.display(tcminferVisualization.displaydiseaseid.word);
+			});
+			$("#vgo").unbind("click");
+			$("#vgo").click(  function(){
+				if(tcminferVisualization.selectId==""){
+				}
+				else if(tcminferVisualization.selectId!="node#0"){
+					tcminferVisualization.displaytargetid.display(tcminferVisualization.selectNode);
+				}
+			});
+		}
+	},
+	displaytargetid :{
+		word : "",
+		display : function(keyword){
+			this.word=keyword;
+			tcminferVisualization.vstate="targetid";
+			var htmlobj=$.ajax({url:"../v0.9/tcminfer/target2protein/kw="+keyword+"&s=-1&o=0",async:false});
+			tcminferVisualization.drawgraph(htmlobj.responseText);
+			tcminferVisualization.clearSelect();
+			$("#vback").unbind("click");
+			$("#vback").click(  function(){
+				tcminferVisualization.displaydrugid.display(tcminferVisualization.displaydrugid.word);
+			});
+			$("#vgo").unbind("click");
+			$("#vgo").click(  function(){
+				if(tcminferVisualization.selectId==""){
+				}
+				else if(tcminferVisualization.selectId!="node#0" ){
+					tcminferVisualization.displayprotein.display(tcminferVisualization.selectNode);
+				}
+			});
+		}
+	},
+	displayprotein : {
+		word : "",
+		display : function(keyword){
+			this.word=keyword;
+			tcminferVisualization.vstate="protein";
+			var htmlobj=$.ajax({url:"../v0.9/tcminfer/protein2geneid/kw="+keyword+"&s=-1&o=0",async:false});
+			tcminferVisualization.drawgraph(htmlobj.responseText);
+			tcminferVisualization.clearSelect();
+			$("#vback").unbind("click");
+			$("#vback").click(  function(){
+				tcminferVisualization.displaytargetid.display(tcminferVisualization.displaytargetid.word);
+			});
+			$('#vgo').removeAttr("disabled");
+			$("#vgo").unbind("click");
+			$("#vgo").click(  function(){
+				if(tcminferVisualization.selectId==""){
+				}
+				else if(tcminferVisualization.selectId!="node#0"){
+					tcminferVisualization.displaygeneid.display(tcminferVisualization.selectNode);
+				}
+			});
+		}
+	},
+	displaygeneid : {
+		word : "",
+		display : function(keyword){
+			this.word=keyword;
+			tcminferVisualization.vstate="geneid";
+			var htmlobj=$.ajax({url:"../v0.9/tcminfer/geneid2geneprod/kw="+encodeURIComponent(keyword)+"&s=-1&o=0",async:false});
+			tcminferVisualization.drawgraph(htmlobj.responseText);
+			tcminferVisualization.clearSelect();
+			$("#vback").unbind("click");
+			$("#vback").click(  function(){
+				tcminferVisualization.displayprotein.display(tcminferVisualization.displayprotein.word);
+			});
+			$("#vgo").unbind("click");
+			$("#vgo").attr('disable',true);
+		}
+	}
+};

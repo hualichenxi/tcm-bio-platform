@@ -18,8 +18,8 @@ public class Edge {
 
     private String id;
 
-    private Data data;
-
+    private Data[] data;
+    
     @XmlAttribute
     public String getSource() {
         return source;
@@ -47,15 +47,16 @@ public class Edge {
         this.id = id;
     }
 
-    public Data getData() {
+    public Data[] getData() {
         return data;
     }
 
-    public void setData(final Data data) {
+    public void setData(final Data[] data) {
         this.data = data;
     }
+    
 
-    public Edge(final String source, final String target, final String id, final Data data) {
+    public Edge(final String source, final String target, final String id, final Data[] data) {
         this.source = source;
         this.target = target;
         this.id = id;

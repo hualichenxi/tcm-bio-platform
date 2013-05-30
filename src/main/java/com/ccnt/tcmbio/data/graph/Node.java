@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Node {
 
     private String id;
-    private Data data;
+    private Data[] data;
 
     @XmlAttribute
     public String getId() {
@@ -24,15 +24,16 @@ public class Node {
         this.id = id;
     }
 
-    public Data getData() {
+    public Data[] getData() {
         return data;
     }
 
-    public void setData(final Data data) {
+    public void setData(final Data[] data) {
         this.data = data;
     }
+    
 
-    public Node(final String id, final Data data){
+    public Node(final String id, final Data[] data){
         this.id = id;
         this.data = data;
     }
