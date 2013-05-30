@@ -14,7 +14,11 @@ import com.ccnt.tcmbio.data.DiseaseSearchData;
 import com.ccnt.tcmbio.data.DrugData;
 import com.ccnt.tcmbio.data.DrugSearchData;
 import com.ccnt.tcmbio.data.GeneData;
+import com.ccnt.tcmbio.data.GeneIDData;
+import com.ccnt.tcmbio.data.GeneIDSearchData;
 import com.ccnt.tcmbio.data.GeneSearchData;
+import com.ccnt.tcmbio.data.ProteinData;
+import com.ccnt.tcmbio.data.ProteinSearchData;
 import com.ccnt.tcmbio.data.TCMData;
 import com.ccnt.tcmbio.data.TCMSearchData;
 import com.ccnt.tcmbio.service.TermService;
@@ -39,12 +43,18 @@ public class TermServiceImpl implements TermService{
     }
 
     @Override
-    public GeneSearchData searchGene(final String keyword, final String start, final String offset){
-        final ArrayList<GeneData> geneDatas = termDAO.searchGene(keyword, start, offset);
-        final Integer count = termDAO.searchGeneCount(keyword);
+    public GeneSearchData searchGOID(final String keyword, final String start, final String offset){
+        final ArrayList<GeneData> geneDatas = termDAO.searchGOID(keyword, start, offset);
+        Integer count = new Integer(0);
+        if (geneDatas.size()==1) {
+            count = 1;
+        } else {
+            count = termDAO.searchGOIDCount(keyword);
+        }
+
         final GeneSearchData geneSearchData = new GeneSearchData();
         geneSearchData.setGeneDatas(geneDatas);
-        geneSearchData.setLabel("Gene ID");
+        geneSearchData.setLabel("GO ID");
         geneSearchData.setResultCount(count);
         return geneSearchData;
     }
@@ -69,6 +79,38 @@ public class TermServiceImpl implements TermService{
         drugSearchData.setLabel("Drug");
         drugSearchData.setResultCount(count);
         return drugSearchData;
+    }
+
+    @Override
+    public GeneIDSearchData searchGeneID(final String keyword, final String start, final String offset){
+        final ArrayList<GeneIDData> geneIDDatas = termDAO.searchGeneID(keyword, start, offset);
+        Integer count = 0;
+        if (geneIDDatas.size() == 1) {
+            count = 1;
+        } else {
+            count = termDAO.searchGeneIDCount(keyword);
+        }
+        final GeneIDSearchData geneIDSearchData = new GeneIDSearchData();
+        geneIDSearchData.setGeneIDDatas(geneIDDatas);
+        geneIDSearchData.setResultCount(count);
+        geneIDSearchData.setLabel("Gene ID");
+        return geneIDSearchData;
+    }
+
+    @Override
+    public ProteinSearchData searchProteinAC(final String keyword, final String start, final String offset){
+        final ArrayList<ProteinData> proteinDatas = termDAO.searchProtein(keyword, start, offset);
+        Integer count = 0;
+        if (proteinDatas.size() == 1) {
+            count = 1;
+        } else {
+            count = termDAO.searchProteinCount(keyword);
+        }
+        final ProteinSearchData proteinSearchData = new ProteinSearchData();
+        proteinSearchData.setLabel("Protein");
+        proteinSearchData.setProteinDatas(proteinDatas);
+        proteinSearchData.setResultCount(count);
+        return proteinSearchData;
     }
 
 }

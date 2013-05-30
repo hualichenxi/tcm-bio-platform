@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccnt.tcmbio.data.DiseaseSearchData;
 import com.ccnt.tcmbio.data.DrugSearchData;
+import com.ccnt.tcmbio.data.GeneIDSearchData;
 import com.ccnt.tcmbio.data.GeneSearchData;
+import com.ccnt.tcmbio.data.ProteinSearchData;
 import com.ccnt.tcmbio.data.TCMSearchData;
 import com.ccnt.tcmbio.service.TermService;
 
@@ -54,14 +56,14 @@ public class TermController {
         return null;
     }
 
-    @RequestMapping(value = "/v0.9/term/searchgene/kw={keyword}&s={start}&o={offset}", method = RequestMethod.GET)
-    public @ResponseBody GeneSearchData searchGene(@PathVariable final String keyword,
+    @RequestMapping(value = "/v0.9/term/searchgoid/kw={keyword}&s={start}&o={offset}", method = RequestMethod.GET)
+    public @ResponseBody GeneSearchData searchGOID(@PathVariable final String keyword,
             @PathVariable final String start, @PathVariable final String offset) throws Exception{
 
-        LOGGER.debug("Reveived GET request: ../v0.9/term/searchgene/kw={}&s={}&o={}", keyword, start, offset);
+        LOGGER.debug("Reveived GET request: ../v0.9/term/searchgoid/kw={}&s={}&o={}", keyword, start, offset);
 
         try {
-            return termService.searchGene(keyword, start, offset);
+            return termService.searchGOID(keyword, start, offset);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -97,6 +99,36 @@ public class TermController {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/term/searchgeneid/kw={keyword}&s={start}&o={offset}", method = RequestMethod.GET)
+    public @ResponseBody GeneIDSearchData searchGeneID(@PathVariable final String keyword,
+            @PathVariable final String start, @PathVariable final String offset) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/searchgeneid/kw={}&s={}&o={}", keyword, start, offset);
+
+        try {
+            return termService.searchGeneID(keyword, start, offset);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/term/searchprotein/kw={keyword}&s={start}&o={offset}", method = RequestMethod.GET)
+    public @ResponseBody ProteinSearchData searchProtin(@PathVariable final String keyword,
+            @PathVariable final String start, @PathVariable final String offset) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/searchprotein/kw={}&s={}&o={}", keyword, start, offset);
+
+        try {
+            return termService.searchProteinAC(keyword, start, offset);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return null;
     }
 

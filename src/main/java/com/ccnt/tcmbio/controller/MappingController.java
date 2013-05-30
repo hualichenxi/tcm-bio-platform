@@ -52,6 +52,32 @@ public class MappingController {
         return null;
     }
 
+    @RequestMapping(value="/v0.9/syncmapping", method=RequestMethod.GET)
+    public @ResponseBody void syncMapping() throws Exception{
+
+        LOGGER.debug("Reveived GET request: /v0.9/syncmapping");
+
+        try {
+            mappingService.syncMappingGraph();
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value="/v0.9/clearmapping", method=RequestMethod.GET)
+    public @ResponseBody void clearMapping() throws Exception{
+
+        LOGGER.debug("Reveived GET request: /v0.9/clearmapping");
+
+        try {
+            mappingService.clearMappingGraph();
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     @RequestMapping(value="/v0.9/mapping", method=RequestMethod.GET)
     public @ResponseBody String getMappings() throws Exception{
 

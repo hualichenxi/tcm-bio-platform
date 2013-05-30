@@ -7,7 +7,6 @@
 package com.ccnt.tcmbio.service.impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
@@ -55,11 +54,11 @@ public class MappingServiceImpl implements MappingService{
                 mappingDAO.newMappingGraph(graphName);
             }
 
-            final ArrayList<OntologyData> ontologyDatas = ontologyDAO.findAllGraphs();
+            final ArrayList<OntologyData> ontologyDatas = ontologyDAO.findAllCachedOntologies("http://localhost:8890/graph-resource");
             final Integer ontologyDatasLength = ontologyDatas.size();
-            Integer ontologyItemSum = 0;
+            Integer ontologyItemSum = 1;
             Integer ontologyDatasLengthCurr = 0;
-            Integer ontologyItemCurr = 0;
+            Integer ontologyItemCurr = 1;
 
             Iterator<OntologyData> ontoIterator = ontologyDatas.iterator();
             while (ontoIterator.hasNext()) {
@@ -123,13 +122,16 @@ public class MappingServiceImpl implements MappingService{
 
     @Override
     public String elapasedTimeToString(final long elapasedTIme){
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(elapasedTIme);
-        final String dayString = Integer.toString(calendar.get(Calendar.DATE));
-        final String hourString = Integer.toString(calendar.get(Calendar.HOUR));
-        final String minuString = Integer.toString(calendar.get(Calendar.MINUTE));
-        final String secoString = Integer.toString(calendar.get(Calendar.SECOND));
-        return dayString + "天" + hourString + "小时" + minuString + "分" + secoString + "秒";
+
+        LOGGER.debug("Mark the time: {}", elapasedTIme);
+
+        final long hour = elapasedTIme/(3600*1000);
+        final long minute = (elapasedTIme - hour * 3600) / (60*1000);
+        final long second = (elapasedTIme - hour * 3600 - minute * 60)/1000;
+        final String hourString = Long.toString(hour);
+        final String minuString = Long.toString(minute);
+        final String secoString = Long.toString(second);
+        return hourString + "h " + minuString + "m " + secoString + "s";
     }
 
     @Override

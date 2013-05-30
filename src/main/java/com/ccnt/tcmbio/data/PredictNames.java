@@ -36,4 +36,6 @@ public class PredictNames {
 
     public static final String GOProduct = "rdfs:label";
 
+    public static final String ProteinACPrefix = "http://purl.uniprot.org/uniprot/";
+
 }

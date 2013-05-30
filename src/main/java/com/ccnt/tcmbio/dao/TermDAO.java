@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import com.ccnt.tcmbio.data.DiseaseData;
 import com.ccnt.tcmbio.data.DrugData;
 import com.ccnt.tcmbio.data.GeneData;
+import com.ccnt.tcmbio.data.GeneIDData;
+import com.ccnt.tcmbio.data.ProteinData;
 import com.ccnt.tcmbio.data.TCMData;
 
 public interface TermDAO {
@@ -19,9 +21,9 @@ public interface TermDAO {
 
     public Integer searchDiseaseCount(String keyword);
 
-    public ArrayList<GeneData> searchGene(String keyword, final String start, final String offset);
+    public ArrayList<GeneData> searchGOID(String keyword, final String start, final String offset);
 
-    public Integer searchGeneCount(String keyword);
+    public Integer searchGOIDCount(String keyword);
 
     public ArrayList<TCMData> searchTCM(String keyword, final String start, final String offset);
 
@@ -30,5 +32,13 @@ public interface TermDAO {
     public ArrayList<DrugData> searchDrug(String keyword, final String start, final String offset);
 
     public Integer searchDrugCount(String keyword);
+
+    public ArrayList<GeneIDData> searchGeneID(String keyword, final String start, final String offset);
+
+    public Integer searchGeneIDCount(String keyword);
+
+    public ArrayList<ProteinData> searchProtein(String keyword, final String start, final String offset);
+
+    public Integer searchProteinCount(String keyword);
 
 }
