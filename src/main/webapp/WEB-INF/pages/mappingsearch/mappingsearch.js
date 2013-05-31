@@ -9,17 +9,22 @@
 $(function(){
 
 	mappingsearch.getAllMapping();
+	mappingsearch.getSyncProgress();
 	
 	$('#sync-btn').live('click', function(){
-		mappingsearch.getSyncProgress();
-	});
-	
-	$('#sync-btn').live('hover', function(){
-		if ($('#sync-btn').attr("disabled") == "disabled"){
-			mappingsearch.getSyncProcessCallBack();
+		if (mappingsearch.syncStatus == 0){
+			mappingsearch.syncMapping();
+		} else if (mappingsearch.syncStatus == 1){
+			if(mappingsearch.popoverStatus == 1){
+				$('#sync-btn').popover('hide');
+				mappingsearch.popoverStatus = 0;
+			} else {
+				mappingsearch.getSyncTpye = 1;
+				mappingsearch.getSyncProgress();
+			}
 		}
 	});
-		
+	
 	$(".mapping-detail-btn").live("click", function(){
 		var iconobject = $(this).children("i");
 		if ( iconobject.attr("class") == "icon-chevron-up icon-black") {
@@ -39,17 +44,22 @@ $(function(){
 			iconobject.attr("class", "icon-chevron-up icon-black");
 		}
 	});
+	
 });
 
 // ================= UTILITY FUNCTIONS =========================================
 var mappingsearch = {
 	
-	urlSync : "../v0.9/mappingsync",
+	urlSync : "../v0.9/syncmapping",
 	urlGetSyncProcess: "../v0.9/getsyncprogress",
 	urlGetAll : "../v0.9/mapping",
 	urlSearch : "../v0.9/mapping/ks/",
 	urlGetDetail : "../v0.9/mapping/ds/",
 	currentOpen : "",// make the open callpase tab
+	syncStatus : 0,
+	popoverStatus : 0,
+	getSyncTpye : 0, // 0 for get status, 1 for get detail
+	
 	spinopts : {
 		lines: 7, // The number of lines to draw
   		length: 8, // The length of each line
@@ -70,6 +80,8 @@ var mappingsearch = {
 	
 	syncMapping: function(){
 		commonjs.ajax("GET", this.urlSync, "", "", this.syncMappingCallBack, commonjs.showErrorTip);
+		// window.open("index.html", "_self");
+		mappingsearch.getSyncProgress();
 	},
 	
 	getSyncProgress: function(){
@@ -91,18 +103,50 @@ var mappingsearch = {
 	
 	syncMappingCallBack : function(data, textStatus, jqXHR){
 		data = commonjs.strToJson(data);
-		// todo
+		// do nothing
 	},
 	
 	getSyncProcessCallBack : function(data, textStatus, jqXHR){
 		data = commonjs.strToJson(data);
+		mappingsearch.syncStatus = data.status;
 		if(data.status == 1){
-			$('#sync-btn').attr("disabled","disabled");
-			showSyncProgressTip(data);
+			// $('#sync-btn').attr("disabled","disabled");
+			$('#sync-btn').html('<i class="icon-repeat icon-white"></i>Updating...Click to get status');
+			if(mappingsearch.getSyncTpye == 1){
+				if(mappingsearch.popoverStatus == 0){
+					$('#sync-btn').popover('destroy');
+					$('#sync-btn').popover({
+						title : 'Synchronizm Status',
+						placement : 'left',
+						html : true,
+						trigger : 'manual',
+						content : mappingsearch.syncDataToHtml(data),
+					});
+					
+					$('#sync-btn').popover('show');
+					mappingsearch.popoverStatus = 1;
+				} 
+				
+			}
 		} else if(data.status == 0){
-			mappingsearch.syncMapping();
-			$('#sync-btn').attr("disabled","disabled");
+			// do nothing : btn enable
 		}
+	},
+	
+	syncDataToHtml : function(data){
+		var html = '<dl>' +
+						'<dt>Status</dt>' + 
+  						'<dd>' + 'Synchronizing' + '</dd>' +  
+	  					'<dt>Passed Time</dt>' + 
+  						'<dd>' + data.passedTime + '</dd>' + 
+  						'<dt>Ontology Percent</dt>' + 
+  						'<dd>' + data.ontologyPercent + '% (' + data.ontologyPercentF + ')' + '</dd>' + 
+  						'<dt>Item Percent</dt>' + 
+  						'<dd>' + data.itemPercent + '% (' + data.itemPercentF + ')' + '</dd>' + 
+  						'<dt>Estimate Time</dt>' + 
+  						'<dd>' + data.estimateTime + '</dd>' + 
+					'</dl>';
+		return html;
 	},
 	
 	displayMapping : function(data, textStatus, jqXHR) {
