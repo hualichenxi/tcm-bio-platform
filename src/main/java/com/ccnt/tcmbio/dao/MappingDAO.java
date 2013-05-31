@@ -36,4 +36,5 @@ public interface MappingDAO {
 
     public ArrayList<MappingData> getMappingDetails(String graphName);
 
+    public ArrayList<String> getRelativeGraph(final String graphName);
 }

@@ -89,7 +89,9 @@ public class TcmInferServiceImpl implements TcmInferService{
     @Override
     public Graphml getDiseaseName(final String tcmName, final Integer start, final Integer offset){
         try {
-            final String url = TCMGeneDITID + "medicine/" + tcmName;
+        	String tcm = tcmName.substring(0, 1).toUpperCase() + tcmName.substring(1).toLowerCase();
+            tcm = tcm.replace(" ", "_");
+            final String url = TCMGeneDITID + "medicine/" + tcm;
             final ArrayList<String> leaves = tcmInferDao.getDiseaseName("<" + url + ">", start, offset);
             final Graph graph = createGraphService.createGraph(url, leaves, "node#0", false, "node#1", "treatment", "edge#0", "G#0", "directed", "0", "1");
             return new Graphml(graph);

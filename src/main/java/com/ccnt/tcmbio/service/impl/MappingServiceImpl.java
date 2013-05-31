@@ -7,7 +7,9 @@
 package com.ccnt.tcmbio.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +19,11 @@ import com.ccnt.tcmbio.dao.OntologyDAO;
 import com.ccnt.tcmbio.data.MappingData;
 import com.ccnt.tcmbio.data.MappingSyncData;
 import com.ccnt.tcmbio.data.OntologyData;
+import com.ccnt.tcmbio.data.graph.Data;
+import com.ccnt.tcmbio.data.graph.Edge;
+import com.ccnt.tcmbio.data.graph.Graph;
+import com.ccnt.tcmbio.data.graph.Graphml;
+import com.ccnt.tcmbio.data.graph.Node;
 import com.ccnt.tcmbio.enumdata.MappingSync;
 import com.ccnt.tcmbio.service.MappingService;
 
@@ -186,5 +193,65 @@ public class MappingServiceImpl implements MappingService{
 
         return mappingDAO.getMappingDetails(graphName);
     }
-
+    
+    @Override
+    public Graphml getMappingGraph(){
+    	
+    	LOGGER.debug("Get Mapping Graph");
+    	
+    	final ArrayList<Node> nodes = new ArrayList<Node>();
+        final ArrayList<Edge> edges = new ArrayList<Edge>();
+        ArrayList<MappingData> list=this.getMappings();
+        HashMap<String, String> nodeMap=new HashMap<String, String>();
+        int nodeId=0;
+        for(final MappingData data: list){
+        	final String name=data.getOntoName();
+        	final String id="node#"+nodeId;
+        	nodeMap.put(name, id);
+        	final Data[] nodeData = new Data[2];
+            nodeData[0] = new Data("k-node", name);
+            nodeData[1] = new Data("label", name);
+            final Node node = new Node(id, nodeData);
+            nodes.add(node);
+        	nodeId++;
+        }
+        int edgeId=0;
+        Set<String> keyset=nodeMap.keySet();
+        Iterator<String> iter=keyset.iterator();
+        HashMap<String, String> notFoundNodeMap=new HashMap<String, String>();
+        while(iter.hasNext()){
+        	String curNodeName=iter.next();
+        	String curNodeId=nodeMap.get(curNodeName);
+        	ArrayList<String> toNodes = mappingDAO.getRelativeGraph(curNodeName);
+        	for(final String mappingNode : toNodes ){
+        		String toName = mappingNode;
+        		String toId = null;
+        		if(!nodeMap.containsKey(toName) && !nodeMap.containsKey(toName)){
+        			String id="node#"+nodeId;
+        			notFoundNodeMap.put(toName, id);
+        			final Data[] nodeData = new Data[2];
+                    nodeData[0] = new Data("k-node", toName);
+                    nodeData[1] = new Data("label", toName);
+                    final Node node = new Node(id, nodeData);
+                    nodes.add(node);
+                	nodeId++;
+                	toId=id;
+        		}
+        		else if(!nodeMap.containsKey(toName)){
+        			toId=notFoundNodeMap.get(toName);
+        		}
+        		else{
+        			toId=nodeMap.get(toName);
+        		}
+        		final Data[] edgeData= new Data[2];
+                edgeData[0] = new Data("k-edge", curNodeName+"-----"+toName);
+                edgeData[1] = new Data("label", "map");
+                final Edge edge = new Edge(curNodeId, toId, "edge#"+edgeId, edgeData);
+                edges.add(edge);
+                edgeId++;
+        	}
+        }
+        final Graph graph = new Graph(nodes, edges, "G#0", "undirected");
+    	return new Graphml(graph);
+    }
 }

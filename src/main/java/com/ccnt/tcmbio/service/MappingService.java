@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.ccnt.tcmbio.data.MappingData;
 import com.ccnt.tcmbio.data.MappingSyncData;
+import com.ccnt.tcmbio.data.graph.Graphml;
 
 public interface MappingService {
 
@@ -26,5 +27,7 @@ public interface MappingService {
     public ArrayList<MappingData> getMappingDetails(String graphName);
 
     public String elapasedTimeToString(long elapasedTIme);
+    
+    public Graphml getMappingGraph();
 
 }

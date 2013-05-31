@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccnt.tcmbio.data.MappingData;
 import com.ccnt.tcmbio.data.MappingSyncData;
+import com.ccnt.tcmbio.data.graph.Graphml;
 import com.ccnt.tcmbio.service.MappingService;
 
 @Controller
@@ -119,6 +120,20 @@ public class MappingController {
             final ArrayList<MappingData> mappingDatas = mappingService.getMappingDetails(body.get("graphname"));
             final ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writeValueAsString(mappingDatas);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    @RequestMapping(value="/v0.9/mappinggraph", method=RequestMethod.GET)
+    public @ResponseBody Graphml  getMappingGraph() throws Exception{
+
+        LOGGER.debug("Reveived GET request: /v0.9/mappinggraph");
+
+        try {
+        	return mappingService.getMappingGraph();
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -223,5 +223,29 @@ public class MappingDAOImpl extends JdbcDaoSupport implements MappingDAO{
         }
         return null;
     }
+    
+    @Override
+    public ArrayList<String> getRelativeGraph(final String graphName){
+        final String sparql = "sparql select ?graph where {graph <http://localhost:8890/graph_mapping_relations> {<"
+                                + graphName +"> tcmbio:mapping ?graph}}";
+
+        LOGGER.debug("getRelativeGraph - query virtuoso: {}", sparql);
+
+        try {
+            final List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sparql);
+            final ArrayList<String> relativeGraphs = new ArrayList<String>();
+            for(final Map<String, Object> row : rows){
+            	relativeGraphs.add(row.get("graph").toString());
+            }
+            return relativeGraphs;
+        } catch (final DataAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (final NumberFormatException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

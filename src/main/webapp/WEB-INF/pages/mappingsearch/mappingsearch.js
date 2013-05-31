@@ -10,6 +10,8 @@ $(function(){
 
 	mappingsearch.getAllMapping();
 	
+	tcminferVisualization.drawgraph();
+	
 	$('#sync-btn').live('click', function(){
 		mappingsearch.getSyncProgress();
 	});
@@ -149,4 +151,45 @@ var mappingsearch = {
 		return html;
 	}
 	
+};
+
+
+//==============        visualization         ==============================
+var tcminferVisualization={
+	vDivid : "visual-div",
+	
+	graphUri : "../v0.9/mappinggraph",
+	//visualization style
+	vstyle : {
+		global:{
+			backgroundColor: "#DDDDDD"
+		},
+		nodes:{
+			shape: "ROUNDRECT",
+			color: "#FF0000",
+			tooltipText: "${label}"
+		},
+		tooltipText: "${node-name}",
+		edges:{
+			tooltipText:"${label}",
+			sytle:"SOLID",
+			Opacity:0.7,
+			color:"#011e59",
+			width:1
+		}
+	},
+	// initialization options
+	voptions : {
+		// where you have the Cytoscape Web SWF
+		swfPath: "../lib/cytoscapeweb/swf/CytoscapeWeb",
+		// where you have the Flash installer SWF
+		flashInstallerPath: "../lib/cytoscapeweb/swf/playerProductInstall"
+	},
+	// init and draw
+	drawgraph : function(){
+		var htmlobj=$.ajax({url : this.graphUri, async : false});
+		var graphml=htmlobj.responseText;
+		var vis = new org.cytoscapeweb.Visualization( this.vDivid, this.voptions);
+		vis.draw({ network: graphml, visualStyle: this.vstyle, nodeTooltipsEnabled: true,edgeTooltipsEnabled: true,edgesMerged:true});
+	}
 }
