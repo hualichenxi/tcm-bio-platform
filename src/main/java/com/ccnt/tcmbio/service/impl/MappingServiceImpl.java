@@ -97,22 +97,21 @@ public class MappingServiceImpl implements MappingService{
                             mappingDAO.insertMappingDetailTriple(graphName, graph1, graph2, count);
                             mappingcount++;
                         }
+
+                        final long middleTime = System.currentTimeMillis();
+                        final long elapasedTime = middleTime - startTime;
+                        MappingSync.INSTANCE.setPassedTime(elapasedTimeToString(elapasedTime));
+                        final long estimateTotalTime = elapasedTime * ontologyItemSum / ontologyItemCurr;
+                        MappingSync.INSTANCE.setEstimateTime(elapasedTimeToString(estimateTotalTime));
                     }
                 }
 
-                final long middleTime = System.currentTimeMillis();
-                final long elapasedTime = middleTime - startTime;
-                MappingSync.INSTANCE.setPassedTime(elapasedTimeToString(elapasedTime));
-
-                final long estimateTotalTime = elapasedTime * ontologyItemSum / ontologyItemCurr;
-                MappingSync.INSTANCE.setEstimateTime(elapasedTimeToString(estimateTotalTime));
-
                 ontologyDatasLengthCurr++;
                 ontologyItemCurr += ontologyData.getItemnum();
-                MappingSync.INSTANCE.setOntologyPercentF(ontologyDatasLengthCurr.toString() + '/' + ontologyDatasLength.toString());
-                MappingSync.INSTANCE.setOntologyPercent(ontologyDatasLengthCurr*100/ontologyDatasLength);
                 MappingSync.INSTANCE.setItemPercentF(ontologyItemCurr.toString() + '/' + ontologyItemSum.toString());
                 MappingSync.INSTANCE.setItemPercent(ontologyItemCurr*100/ontologyItemSum);
+                MappingSync.INSTANCE.setOntologyPercentF(ontologyDatasLengthCurr.toString() + '/' + ontologyDatasLength.toString());
+                MappingSync.INSTANCE.setOntologyPercent(ontologyDatasLengthCurr*100/ontologyDatasLength);
 
                 mappingDAO.insertMappingTriple(graphName, graph1, mappingcount);
             }

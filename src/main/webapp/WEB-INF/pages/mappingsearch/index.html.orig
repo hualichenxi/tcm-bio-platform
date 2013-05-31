@@ -46,6 +46,7 @@
 			</div>
 		</div>
 		<div class="container-fluid span11 offset1">
+<<<<<<< HEAD
 			<ul class="nav nav-tabs">
 				<li class="active">
 					<a href="#tab1" data-toggle="tab">List</a>
@@ -56,17 +57,18 @@
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab1">
+		
 					<div class="accordion" id="mappingtable">
 						<div class="accordion-group" style="background-color: #bfbfbf">
-			    			<div class="accordion-heading">
-				     			<div class="accordion-toggle row-fluid">
+					    	<div class="accordion-heading">
+						     	<div class="accordion-toggle row-fluid">
 							     	<div class="span5">
 							     		Ontology Name
 							     	</div>
-							      	<div class="span3">
+							      	<div class="span4">
 							      		Mappings
 							      	</div>
-							      	<div class="span3">
+							      	<div class="span2 hide">
 							      		<button class="btn btn-info" id="sync-btn">
 							      			<i class="icon-repeat icon-white"></i>Update Mappings
 							      		</button>
@@ -107,14 +109,69 @@
 						        		</tbody>
 						        	</table>
 					    	  	</div>
-						    </div>				
-						 </div>
-						<div class="tab-pane" id="tab2">
-							<div id="visual-div" style="height:800px"></div>
+						    </div>
 						</div>
 					</div>
 				</div>
+				<div class="tab-pane" id="tab2">
+					<div id="visual-div" style="height:800px"></div>
+=======
+			<div class="accordion" id="mappingtable">
+				<div class="accordion-group" style="background-color: #bfbfbf">
+			    	<div class="accordion-heading">
+				     	<div class="accordion-toggle row-fluid">
+					     	<div class="span5">
+					     		Ontology Name
+					     	</div>
+					      	<div class="span3">
+					      		Mappings
+					      	</div>
+					      	<div class="span3">
+					      		<button class="btn btn-info" id="sync-btn">
+					      			<i class="icon-repeat icon-white"></i>Update Mappings
+					      		</button>
+					      	</div>
+				      	</div>
+			    	</div>
+			    </div>
+			  	<div class="accordion-group hide" id="sample-mapping">
+			    	<div class="accordion-heading">
+			    	  	<div class="accordion-toggle row-fluid">
+			    	  		<div class="span5 graph-name">
+			    	  			xx
+			    	  		</div>
+			    	  		<div class="span5 total-num">
+			    	  			123
+			    	  		</div>
+			    	  		<div class="span2">
+			    	  			<button class="btn btn-link mapping-detail-btn" data-toggle="collapse" data-target="#collapse0">
+			    	  				<i class="icon-chevron-up icon-black"></i>Details
+			    	  			</button>
+			    	  		</div>
+			    	  	</div>
+			    	</div>
+				    <div id="collapse0" class="accordion-body collapse">
+				      	<div class="accordion-inner" style="background-color: #eeeeee; margin: 0px 15px 10px 15px">
+				        	<table class="table table-striped">
+				        		<thead>
+				        			<tr>
+					        			<th>Mapping Ontoliges</th>
+					        			<th>Number of apping Items</th>
+				        			</tr>
+				        		</thead>
+				        		<tbody class="sub-mapping-graphs spin-progress">
+				        			<tr class="hide sample-mapping-graph">
+				        				<td class="sub-graph-name">xx</td>
+				        				<td class="sub-total-num">yy</td>
+				        			</tr>
+				        		</tbody>
+				        	</table>
+			    	  	</div>
+				    </div>
+>>>>>>> d5241249e31e84a92e64b4056709d0f0755d8468
+				</div>
 			</div>
+					
 		</div>
 	</body>
 </html>
