@@ -225,7 +225,7 @@ public class MappingServiceImpl implements MappingService{
         	for(final String mappingNode : toNodes ){
         		String toName = mappingNode;
         		String toId = null;
-        		if(!nodeMap.containsKey(toName) && !nodeMap.containsKey(toName)){
+        		if(!nodeMap.containsKey(toName) && !notFoundNodeMap.containsKey(toName)){
         			String id="node#"+nodeId;
         			notFoundNodeMap.put(toName, id);
         			final Data[] nodeData = new Data[2];
