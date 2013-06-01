@@ -17,27 +17,35 @@ import com.ccnt.tcmbio.data.TCMData;
 
 public interface TermDAO {
 
-    public ArrayList<DiseaseData> searchDisease(String keyword, final String start, final String offset);
+    /**
+     *
+     * @param keyword
+     * @param start
+     * @param offset
+     * @param type search type: 0 for fuzzy&exact search; 1 for exact search; 2 for fuzzy search
+     * @return
+     */
+    public ArrayList<DiseaseData> searchDisease(String keyword, final String start, final String offset, final int type);
 
     public Integer searchDiseaseCount(String keyword);
 
-    public ArrayList<GeneData> searchGOID(String keyword, final String start, final String offset);
+    public ArrayList<GeneData> searchGOID(String keyword, final String start, final String offset, final int type);
 
     public Integer searchGOIDCount(String keyword);
 
-    public ArrayList<TCMData> searchTCM(String keyword, final String start, final String offset);
+    public ArrayList<TCMData> searchTCM(String keyword, final String start, final String offset, final int type);
 
     public Integer searchTcmCount(String keyword);
 
-    public ArrayList<DrugData> searchDrug(String keyword, final String start, final String offset);
+    public ArrayList<DrugData> searchDrug(String keyword, final String start, final String offset, final int type);
 
     public Integer searchDrugCount(String keyword);
 
-    public ArrayList<GeneIDData> searchGeneID(String keyword, final String start, final String offset);
+    public ArrayList<GeneIDData> searchGeneID(String keyword, final String start, final String offset, final int type);
 
     public Integer searchGeneIDCount(String keyword);
 
-    public ArrayList<ProteinData> searchProtein(String keyword, final String start, final String offset);
+    public ArrayList<ProteinData> searchProtein(String keyword, final String start, final String offset, final int type);
 
     public Integer searchProteinCount(String keyword);
 

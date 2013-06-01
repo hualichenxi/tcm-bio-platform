@@ -39,10 +39,43 @@ $(function(){
 		}
 	});
 	
+	$('.link-checkbox').live('click', function(){
+		if($(this).prop('checked') == true){
+			$('.btn-if-link').addClass('btn btn-link');
+			$('.link-checkbox').prop('checked', true);
+		} else {
+			$('.btn-if-link').removeClass('btn btn-link');
+			$('.link-checkbox').prop('checked', false);
+		}
+	});
+	
+	$('.btn-if-link').live('click', function(){
+		var keyword = $(this).html();
+		if($(this).hasClass('URL')){
+			window.open($(this).attr('data-url'));
+		} else if($(this).hasClass('Drug')){
+			termsearch.modalGetType = "Drug";
+			termsearch.getModalDetail(termsearch.getDrugURL + keyword);
+		} else if($(this).hasClass('TCM')){
+			termsearch.modalGetType = "TCM";
+			termsearch.getModalDetail(termsearch.getTCMURL + keyword);
+		} else if($(this).hasClass('GOID')){
+			termsearch.modalGetType = "GOID";
+			termsearch.getModalDetail(termsearch.getGOIDURL + keyword);
+		} else if($(this).hasClass('Disease')){
+			termsearch.modalGetType = "Disease";
+			termsearch.getModalDetail(termsearch.getDiseaseURL + keyword);
+		} else if($(this).hasClass('GeneID')){
+			termsearch.modalGetType = "GeneID";
+			termsearch.getModalDetail(termsearch.getGeneIDURL + keyword);
+		}
+	});
+	
 });
 
 // ================= UTILITY FUNCTIONS =========================================
 var termsearch = {
+	// fuzzy search APIs
 	searchTermURL : '../v0.9/termsearch/kw=',
 	searchDiseaseURL : '../v0.9/term/searchdisease/kw=',
 	searchGOIDURL : '../v0.9/term/searchgoid/kw=',
@@ -51,11 +84,20 @@ var termsearch = {
 	searchDrugURL : '../v0.9/term/searchdrug/kw=',
 	searchProteinURL : '../v0.9/term/searchprotein/kw=',
 	
+	// exact search APIs
+	getDiseaseURL : '../v0.9/term/getdisease/kw=',
+	getGOIDURL : '../v0.9/term/getgoid/kw=',
+	getGeneIDURL : '../v0.9/term/getgeneid/kw=',
+	getTCMURL : '../v0.9/term/gettcm/kw=',
+	getDrugURL : '../v0.9/term/getdrug/kw=',
+	getProteinURL : '../v0.9/term/getprotein/kw=',
+	
 	start : 0,
 	offset : 10,
 	currPage : 0,
 	type : "",
 	totalNum : 0,
+	modalGetType : "",
 	
 	//spin-progress-mark
 	spinCount : 0,
@@ -84,13 +126,13 @@ var termsearch = {
 		'diseaseName' : 'Disease Name',
 		// 'diseaseID' : 'Disease ID',
 		// 'diseaseIDInDrugBank' : 'DiseaseID In Drug Bank',
-		'definition' : 'Definition',
-		'xrefs' : 'xrefs',
+		'definition' : 'Definition', // todo
+		'xrefs' : 'xrefs', // todo
 		'relatedSynonym' : 'Related Synonym',
 		// 'relatedDrugID' : 'Related Drug ID',
-		'relatedDrugName' : 'Related Drug',
-		'relatedTCM' : 'Related TCM',
-		'relatedGene' : 'Related Gene(GOID)'
+		'relatedDrugName' : 'Related Drug', // todo
+		'relatedTCM' : 'Related TCM', // todo
+		'relatedGene' : 'Related GeneID' // todo
 	},
 	
 	cardGOIDSubTitle : {
@@ -98,17 +140,18 @@ var termsearch = {
 		'definition' : 'Definition',
 		'synonym' : 'Synonym',
 		'ontology' : 'Ontology',
-		'relatedProteinSet' : 'Related Protein',
-		'relatedTCMSet' : 'Relate TCM',
-		'relatedDiseaseNameSet' : 'Related Disease'
+		'relatedProteinSet' : 'Related Protein', // todo
+		'relatedTCMSet' : 'Relate TCM', // todo
+		'relatedDiseaseNameSet' : 'Related Disease', // todo
+		'geneEntrezID' : 'Gene ID' // todo
 	},
 	
 	cardGeneIDSubTitle : {
 		'geneID' : 'Gene ID',
-		'goID' : 'Related Gene Ontology ID',
-		'relatedProteinSet' : 'Related Protein',
-		'relatedTCMSet' : 'Relate TCM',
-		'relatedDiseaseNameSet' : 'Related Disease'
+		'goID' : 'Related Gene Ontology ID', // todo
+		'relatedProteinSet' : 'Related Protein', // todo
+		'relatedTCMSet' : 'Relate TCM', // todo
+		'relatedDiseaseNameSet' : 'Related Disease' // todo
 	},
 	
 	cardTCMSubTitle : {
@@ -116,23 +159,24 @@ var termsearch = {
 		'effect' : 'Effect',
 		'ingredient' : 'Ingredient',
 		'treatment' : 'Treatment',
-		'relatedGene' : 'Related Gene(GOID)'
+		'relatedGene' : 'Related Gene(GOID)' // todo
 	},
 	
 	cardDrugSubTitle : {
 		'state' : 'State',
-		'drugID' : 'Drug ID',
+		'drugID' : 'Drug ID', 
 		'brandName' : 'Brand Name',
 		'drugCategory' : 'Drug Category',
 		'mechanismOfAction' : 'Mechanism Of Action',
-		'pages' : 'pages',
+		'pages' : 'pages', // todo url http://www.drugbank.ca/drugs/DB01217 etc
 		'affectedPrganism' : 'Affected Organism',
-		'diseaseTarget' : 'Disease Target'
+		'diseaseTarget' : 'Disease Target' // todo ?
 	},
 	
 	cardProteinSubTitle : {
-		'relatedGOID' : 'Related GOID',
-		'relatedGeneID' : 'Related GeneID'
+		'proteinAC' : 'Protein Accession ID', // todo
+		'relatedGOID' : 'Related GOID', // todo
+		'relatedGeneID' : 'Related GeneID' // todo
 	},
 	
 	getType : function() {
@@ -208,8 +252,11 @@ var termsearch = {
 		return prefix + kw + "&s=" + s + "&o=" + o;
 	},
 	
-	searchTerm : function(url){
-		
+	getModalDetail : function(url){
+		commonjs.ajax("GET", url, "", "", this.displayGetResult, commonjs.showErrorTip);
+		$('#getModealDetail .modal-body').html("");
+		$('#getModealDetail').modal('show');
+		$('#modal-spin-progress').spin(this.spinopts);
 	},
 	
 	searchDisease : function(url){
@@ -248,6 +295,32 @@ var termsearch = {
 		$('.spin-progress').spin(this.spinopts);
 	},
 	
+	displayGetResult : function(data, textStatus, jqXHR){
+		var html;
+		var title;
+		if(data == null || data == "") {
+			html = "No resource now......";
+		}else if(termsearch.modalGetType == "Drug"){
+			title = termsearch.splitResource(data.drugName);
+			html = termsearch.toModalDetail(title, "Drug", data, termsearch.cardDrugSubTitle);
+		} else if(termsearch.modalGetType == "TCM") {
+			title = termsearch.splitResource(data.tcmName);
+			html = termsearch.toModalDetail(title, "TCM", data, termsearch.cardTCMSubTitle);
+		} else if(termsearch.modalGetType == "GOID") {
+			title = termsearch.splitResource(data.geneID);
+			html = termsearch.toModalDetail(title, "GO ID", data, termsearch.cardGOIDSubTitle);
+		} else if(termsearch.modalGetType == "Disease") {
+			title = termsearch.splitResource(data.diseaseName);
+			html = termsearch.toModalDetail(title, "Disease", data, termsearch.cardDiseaseSubTitle);
+		} else if(termsearch.modalGetType == "GeneID") {
+			title = termsearch.splitResource(data.geneID);
+			html = termsearch.toModalDetail(title, "Gene ID", data, termsearch.cardGeneIDSubTitle);
+		} 
+		$('#getModealDetail .title').html('Detail Of ' + title);
+		$('#modal-spin-progress').spin(false);
+		$('#getModealDetail .modal-body').html(html);
+	},
+	
 	displaySearchResult : function(data, textStatus, jqXHR) {
 		termsearch.spinCount --;
 		termsearch.resultCount += data.resultCount;
@@ -255,7 +328,6 @@ var termsearch = {
 			$('.spin-progress').spin(false);
 			$('#total-or-fuzzytip').html("Total " + termsearch.resultCount + " matched results.");
 		}
-		
 		
 		termsearch.totalNum += data.resultCount;
 		if (data.resultCount!=0 && data.label=="Disease"){
@@ -267,7 +339,7 @@ var termsearch = {
 				var listTitle2  = "Related Gene";
 				var listContent2 = data.diseaseDatas[i].relatedGene;
 				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "dis", i));
-				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.diseaseDatas[i], termsearch.cardDiseaseSubTitle, "dis", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, category, data.diseaseDatas[i], termsearch.cardDiseaseSubTitle, "dis", i));
 				
 				
 			}
@@ -280,7 +352,7 @@ var termsearch = {
 				var listTitle2  = "Related TCM";
 				var listContent2 = data.geneDatas[i].relatedTCMSet;
 				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "goid", i));
-				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.geneDatas[i], termsearch.cardGOIDSubTitle, "goid", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, category, data.geneDatas[i], termsearch.cardGOIDSubTitle, "goid", i));
 				
 			}
 		} else if (data.resultCount!=0 && data.label=="Gene ID"){
@@ -292,7 +364,7 @@ var termsearch = {
 				var listTitle2  = "Related TCM";
 				var listContent2 = data.geneIDDatas[i].relatedTCMSet;
 				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "geneid", i));
-				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.geneIDDatas[i], termsearch.cardGeneIDSubTitle, "geneid", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, category, data.geneIDDatas[i], termsearch.cardGeneIDSubTitle, "geneid", i));
 				
 			}
 		} else if (data.resultCount!=0 && data.label=="TCM"){
@@ -304,7 +376,7 @@ var termsearch = {
 				var listTitle2  = "Other";
 				var listContent2 = "";
 				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "tcm", i));
-				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.tcmDatas[i], termsearch.cardTCMSubTitle, "tcm", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, category, data.tcmDatas[i], termsearch.cardTCMSubTitle, "tcm", i));
 				
 			}
 		} else if (data.resultCount!=0 && data.label=="Drug"){
@@ -315,8 +387,8 @@ var termsearch = {
 				var listContent1 = data.drugDatas[i].description;
 				var listTitle2  = "Drug Category";
 				var listContent2 = data.drugDatas[i].drugCategory;
-				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, i));
-				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.drugDatas[i], termsearch.cardDrugSubTitle, i));
+				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "drug", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, category, data.drugDatas[i], termsearch.cardDrugSubTitle, "drug", i));
 				
 			}
 		} else if (data.resultCount!=0 && data.label=="Protein"){
@@ -327,8 +399,8 @@ var termsearch = {
 				var listContent1 = data.proteinDatas[i].relatedGeneID;
 				var listTitle2  = "Other";
 				var listContent2 = "";
-				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, i));
-				$('#card-panl').prepend(termsearch.toHTMLCard(title, data.proteinDatas[i], termsearch.cardProteinSubTitle, i));
+				$('#row-panl').prepend(termsearch.toHTMLRow(title, category, listTitle1, listContent1, listTitle2, listContent2, "protein", i));
+				$('#card-panl').prepend(termsearch.toHTMLCard(title, category, data.proteinDatas[i], termsearch.cardProteinSubTitle, "protein", i));
 				
 			}
 		}
@@ -345,7 +417,7 @@ var termsearch = {
 		}
 	},
 	
-	toHTMLRow : function(title, category, listTitle1, listContent1, listTitle2, listContent2, catogory, id){
+	toHTMLRow : function(title, category, listTitle1, listContent1, listTitle2, listContent2, id_type, id){
 		$('#result-row .term-title').html(title);
 		$('#result-row .term-category').html('[' + category + ']');
 		$('#result-row .term-shortlist1-title').html(listTitle1);
@@ -375,13 +447,15 @@ var termsearch = {
 		$('#result-row .term-shortlist1-content').html(convertListContent1);
 		$('#result-row .term-shortlist2-content').html(convertListContent2);
 		
-		return '<div class="row-fluid result-set-left" id="result-row--' + catogory + id + '">' + $('#result-row').html() + '</div>';
+		return '<div class="row-fluid result-set-left" id="result-row--' + id_type + id + '">' + $('#result-row').html() + '</div>';
 		
 	},
 	
-	toHTMLCard : function(title, data, subTitles, catogory, id){
-		var html = '<div class="thumbnail hide result-card-class" id="result-card--' + catogory + id + '">' +
-      					'<h3 class="term-card-title">' + title + '</h3><dl>';
+	toHTMLCard : function(title, category, data, subTitles, id_type, id){
+		var html = '<div class="thumbnail hide result-card-class" id="result-card--' + id_type + id + '">' +
+      					'<div class="row-fluid"><div class="span9"><h3 class="term-card-title">' + title + '</h3></div>' + 
+      					'<div class="span3" style="margin-top: 20px">' + 
+	     	 			'<label class="checkbox"><input type="checkbox" class="link-checkbox"> Show Links</label></div></div><dl>';
 		for (var subTitle in subTitles){
 			if(($.isArray(data[subTitle]) && data[subTitle].length !=0) || (!$.isArray(data[subTitle]) && data[subTitle])){
 				html += '<dt>' + subTitles[subTitle] + '</dt>';
@@ -391,25 +465,141 @@ var termsearch = {
 					if(length < 6){
 						html += '<ul>';
 						for(var i=0; i<length; i++){
-							html += '<li>' + termsearch.splitResource(data[subTitle][i]) + '</li>';
+							html += '<li>' + termsearch.typeConvert(subTitle, data[subTitle][i], category) + '</li>';
 						}
 						html += '</ul>';
 					} else {
 						for(var i=0; i<length; i++){
-							html += termsearch.splitResource(data[subTitle][i]);
+							html += termsearch.typeConvert(subTitle, data[subTitle][i], category);
 							if (i<length-1){
 								html += ', ';
 							}
 						}
 					}
 				} else {
-					html += termsearch.splitResource(data[subTitle]);
+					html += termsearch.typeConvert(subTitle, data[subTitle], category);
 				}
 				html += '</dd>';
 			}
 		}
 		html += '</dl></div>';
 		return html;
+	},
+	
+	toModalDetail : function(title, category, data, subTitles){
+		var html = '<div class="row-fluid"><div class="span9"><h3 class="term-card-title">' + title + '</h3></div>' + 
+      					'<div class="span3" style="margin-top: 20px">' + 
+	     	 			'<label class="checkbox"><input type="checkbox" class="link-checkbox"> Show Links</label></div></div><div><dl>';
+		for (var subTitle in subTitles){
+			if(($.isArray(data[subTitle]) && data[subTitle].length !=0) || (!$.isArray(data[subTitle]) && data[subTitle])){
+				html += '<dt>' + subTitles[subTitle] + '</dt>';
+				html += '<dd>';
+				if ($.isArray(data[subTitle])){
+					var length = data[subTitle].length;
+					if(length < 6){
+						html += '<ul>';
+						for(var i=0; i<length; i++){
+							html += '<li>' + termsearch.typeConvert(subTitle, data[subTitle][i], category) + '</li>';
+						}
+						html += '</ul>';
+					} else {
+						for(var i=0; i<length; i++){
+							html += termsearch.typeConvert(subTitle, data[subTitle][i], category);
+							if (i<length-1){
+								html += ', ';
+							}
+						}
+					}
+				} else {
+					html += termsearch.typeConvert(subTitle, data[subTitle], category);
+				}
+				html += '</dd>';
+			}
+		}
+		html += '</dl></div>';
+		return html;
+	},
+	
+	typeConvert : function(subTitle, content, searchType) {
+		if(searchType == "Disease"){
+			if(subTitle == "definition"){
+				var contentArray = content.split('url:http\\://');
+				var html = '<ul><li>' + contentArray[0].substring(0, contentArray[0].length-1) + '</li>';
+				for(var i=1; i<contentArray.length; i++){
+					if(i == contentArray.length-1){
+						html += '<li>' + termsearch.toDirLink("URL", contentArray[i].substring(0, contentArray[i].length-1), 'http://' + contentArray[i].substring(0, contentArray[i].length-1)) + '</li>';
+					} else {
+						html += '<li>' + termsearch.toDirLink("URL", contentArray[i], 'http://' + contentArray[i]) + '</li>';
+					}
+				}
+				html += '</ul>';
+				return html;
+			} else if(subTitle == "xrefs"){
+				return content;
+			} else if(subTitle == "relatedDrugName"){
+				return termsearch.toGetDetailLink("Drug", termsearch.splitResource(content));
+			} else if(subTitle == "relatedTCM"){
+				return termsearch.toGetDetailLink("TCM", termsearch.splitResource(content));
+			} else if(subTitle == "relatedGene"){
+				return termsearch.toGetDetailLink("GeneID", termsearch.splitResource(content));
+			} else {
+				return termsearch.splitResource(content);
+			}
+		} else if(searchType == "GO ID"){
+			if(subTitle == "relatedProteinSet"){
+				return termsearch.toDirLink("URL", termsearch.splitResource(content), "http://www.uniprot.org/uniprot/" + termsearch.splitResource(content));
+			} else if(subTitle == "relatedTCMSet"){
+				return termsearch.toGetDetailLink("TCM", termsearch.splitResource(content));
+			} else if(subTitle == "relatedDiseaseNameSet"){
+				return termsearch.toGetDetailLink("Disease", termsearch.splitResource(content));
+			} else if(subTitle == "geneEntrezID"){
+				return termsearch.toGetDetailLink("GeneID", termsearch.splitResource(content));
+			} else {
+				return termsearch.splitResource(content);
+			}
+		} else if(searchType == "Gene ID"){
+			if(subTitle == "goID"){
+				return termsearch.toGetDetailLink("GOID", termsearch.splitResource(content));
+			} else if(subTitle == "relatedProteinSet"){
+				return termsearch.toDirLink("URL", termsearch.splitResource(content), "http://www.uniprot.org/uniprot/" + termsearch.splitResource(content));
+			} else if(subTitle == "relatedTCMSet"){
+				return termsearch.toGetDetailLink("TCM", termsearch.splitResource(content));
+			} else if(subTitle == "relatedDiseaseNameSet"){
+				return termsearch.toGetDetailLink("Disease", termsearch.splitResource(content));
+			} else {
+				return termsearch.splitResource(content);
+			}
+		} else if(searchType == "TCM"){
+			if(subTitle == "relatedGene"){
+				return termsearch.toGetDetailLink("GOID", termsearch.splitResource(content));
+			} else {
+				return termsearch.splitResource(content);
+			}
+		} else if(searchType == "Drug"){
+			if(subTitle == "pages"){
+				return termsearch.toDirLink("URL", (content.split("://"))[(content.split("://")).length - 1], content);
+			} else {
+				return termsearch.splitResource(content);
+			}
+		} else if(searchType == "Protein"){
+			if(subTitle == "proteinAC"){
+				return termsearch.toDirLink("URL", termsearch.splitResource(content), "http://www.uniprot.org/uniprot/" + termsearch.splitResource(content));
+			} else if(subTitle == "relatedGOID"){
+				return termsearch.toGetDetailLink("GOID", termsearch.splitResource(content));
+			} else if(subTitle == "relatedGeneID"){
+				return termsearch.toGetDetailLink("GeneID", termsearch.splitResource(content));
+			} else {
+				return termsearch.splitResource(content);
+			}
+		} 
+	},
+	
+	toGetDetailLink : function(type, content){
+		return '<span class="btn-if-link ' + type + '">' + content + '</span>';
+	},
+	
+	toDirLink : function(type, content, url) {
+		return '<span class="btn-if-link ' + type + '" data-url="' + url + '">' + content + '</span>';
 	},
 	
 	splitResource : function(resource){

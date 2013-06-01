@@ -2,3 +2,7 @@
 	border-bottom: 2px solid #eeeeee;
 	margin: 70px 30px 30px 30px;
 }
+
+.btn-if-link{
+	padding: 0px;
+}

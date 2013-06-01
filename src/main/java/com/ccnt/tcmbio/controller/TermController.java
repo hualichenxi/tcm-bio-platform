@@ -15,11 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ccnt.tcmbio.data.DiseaseData;
 import com.ccnt.tcmbio.data.DiseaseSearchData;
+import com.ccnt.tcmbio.data.DrugData;
 import com.ccnt.tcmbio.data.DrugSearchData;
+import com.ccnt.tcmbio.data.GeneData;
+import com.ccnt.tcmbio.data.GeneIDData;
 import com.ccnt.tcmbio.data.GeneIDSearchData;
 import com.ccnt.tcmbio.data.GeneSearchData;
+import com.ccnt.tcmbio.data.ProteinData;
 import com.ccnt.tcmbio.data.ProteinSearchData;
+import com.ccnt.tcmbio.data.TCMData;
 import com.ccnt.tcmbio.data.TCMSearchData;
 import com.ccnt.tcmbio.service.TermService;
 
@@ -125,6 +131,90 @@ public class TermController {
 
         try {
             return termService.searchProteinAC(keyword, start, offset);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/term/getdisease/kw={keyword}", method = RequestMethod.GET)
+    public @ResponseBody DiseaseData getDisease(@PathVariable final String keyword) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/getdisease/kw={}", keyword);
+
+        try {
+            return termService.getDisease(keyword);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/term/getgoid/kw={keyword}", method = RequestMethod.GET)
+    public @ResponseBody GeneData getGOID(@PathVariable final String keyword) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/getgoid/kw={}", keyword);
+
+        try {
+            return termService.getGOID(keyword);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/term/getgeneid/kw={keyword}", method = RequestMethod.GET)
+    public @ResponseBody GeneIDData getGeneID(@PathVariable final String keyword) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/getgeneid/kw={}", keyword);
+
+        try {
+            return termService.getGeneID(keyword);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/term/gettcm/kw={keyword}", method = RequestMethod.GET)
+    public @ResponseBody TCMData getTCM(@PathVariable final String keyword) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/gettcm/kw={}", keyword);
+
+        try {
+            return termService.getTCM(keyword);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/term/getdrug/kw={keyword}", method = RequestMethod.GET)
+    public @ResponseBody DrugData getDrug(@PathVariable final String keyword) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/getdrug/kw={}", keyword);
+
+        try {
+            return termService.getDrug(keyword);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/v0.9/term/getprotein/kw={keyword}", method = RequestMethod.GET)
+    public @ResponseBody ProteinData getProtein(@PathVariable final String keyword) throws Exception{
+
+        LOGGER.debug("Reveived GET request: ../v0.9/term/getprotein/kw={}", keyword);
+
+        try {
+            return termService.getProteinAC(keyword);
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
