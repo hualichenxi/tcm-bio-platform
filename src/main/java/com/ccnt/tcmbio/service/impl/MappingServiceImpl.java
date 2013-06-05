@@ -209,7 +209,12 @@ public class MappingServiceImpl implements MappingService{
         	nodeMap.put(name, id);
         	final Data[] nodeData = new Data[2];
             nodeData[0] = new Data("k-node", name);
-            nodeData[1] = new Data("label", name);
+            String tmp=name;
+            while(tmp.charAt(tmp.length()-1)=='/'){
+            	tmp=tmp.substring(0, tmp.length()-1);
+            }
+            String shotName=name.substring(tmp.lastIndexOf("/")+1);
+            nodeData[1] = new Data("label", shotName);
             final Node node = new Node(id, nodeData);
             nodes.add(node);
         	nodeId++;
@@ -230,7 +235,12 @@ public class MappingServiceImpl implements MappingService{
         			notFoundNodeMap.put(toName, id);
         			final Data[] nodeData = new Data[2];
                     nodeData[0] = new Data("k-node", toName);
-                    nodeData[1] = new Data("label", toName);
+                    String tmp=toName;
+                    if(tmp.charAt(tmp.length()-1)=='/'){
+                    	tmp=tmp.substring(0, tmp.length()-1);
+                    }
+                    String shotName=toName.substring(tmp.lastIndexOf("/")+1);
+                    nodeData[1] = new Data("label", shotName);
                     final Node node = new Node(id, nodeData);
                     nodes.add(node);
                 	nodeId++;

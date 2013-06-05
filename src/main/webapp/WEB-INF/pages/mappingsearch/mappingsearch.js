@@ -211,9 +211,8 @@ var tcminferVisualization={
 		nodes:{
 			shape: "ROUNDRECT",
 			color: "#FF0000",
-			tooltipText: "${label}"
+			tooltipText: "${node-name}"
 		},
-		tooltipText: "${node-name}",
 		edges:{
 			tooltipText:"${label}",
 			sytle:"SOLID",
@@ -234,6 +233,50 @@ var tcminferVisualization={
 		var htmlobj=$.ajax({url : this.graphUri, async : false});
 		var graphml=htmlobj.responseText;
 		var vis = new org.cytoscapeweb.Visualization( this.vDivid, this.voptions);
+		vis.ready(function(){
+			vis.addListener("click", "nodes", function(event) {
+                handle_click(event);
+            });
+			function handle_click(event) {
+                var target = event.target;
+                tcminferVisualization.selectNode = event.target.data.label;
+                tcminferVisualization.selectId = event.target.data.id;
+                $("#vfitertext").val(tcminferVisualization.selectNode);
+           }
+		});
 		vis.draw({ network: graphml, visualStyle: this.vstyle, nodeTooltipsEnabled: true,edgeTooltipsEnabled: true,edgesMerged:true});
+		$("#vfilter").unbind("click");
+		$("#vfilter").click(  function(){
+			var selabel=$("#vfitertext").val();
+			var nodes=vis.nodes();
+			var seId="";
+			for(var i=0;i<nodes.length;i++){
+				if(nodes[i].data.label==selabel){
+					seId=nodes[i].data.id;
+					break;
+				}
+			}
+			var neNodes=vis.firstNeighbors([seId]).neighbors;
+			vis.filter("nodes",function(node) {
+			    if(seId==""){
+			    	return true;
+			    }
+			    else if(node.data.id==seId){
+			    	return true;
+			    }
+			    else if(neNodes==undefined){
+			    	return false;
+			    }
+			    else{
+			    	for(var i=0;i<neNodes.length;i++){
+			    		if(neNodes[i].data.id==node.data.id){
+			    			return true;
+			    		}
+			    	}
+			    	return false;
+			    }
+			    return true;
+			});
+		});
 	}
 }
