@@ -26,6 +26,11 @@
         	<property name="createGraphService" ref="createGraphService" />
         </bean>
         
+        <bean id="bioInferService" class="com.ccnt.tcmbio.service.impl.BioInferServiceImpl">
+        	<property name="bioInferDao" ref="bioInferDao" />
+        	<property name="createGraphService" ref="createGraphService" />
+        </bean>
+        
         <bean id="termService" class="com.ccnt.tcmbio.service.impl.TermServiceImpl">
         	<property name="termDAO" ref="termDAO" />
         </bean>
