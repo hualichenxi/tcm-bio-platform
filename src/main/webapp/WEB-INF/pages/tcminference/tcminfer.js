@@ -70,7 +70,7 @@ var tcminfer = {
 		$('.spin-progress').spin(false);
 		data = commonjs.strToJson(data);
 		if(data.status==false){
-			// todo
+			// TODO
 		} else {
 			for(var i=0; i < data.tcmInferData.length; i++) {
 				var htmlRowTab2 = tcminfer.toHtmlRowTab2(data.tcmInferData[i]);

@@ -31,8 +31,8 @@
 					<li><a href="../ontologysearch/index.html">TCM Ontology</a></li>
 					<li><a href="../termsearch/index.html">Term Search</a></li>
 					<li><a href="../mappingsearch/index.html">Data Sets</a></li>
-					<li class="active"><a href="../tcminference/index.html">BIO for TCM</a></li>
-					<li><a href="../bioinference/index.html">TCM for BIO</a></li>
+					<li><a href="../tcminference/index.html">BIO for TCM</a></li>
+					<li class="active"><a href="../bioinference/index.html">TCM for BIO</a></li>
 					<li><a href>Publication</a></li>
 					<li><a href>Literature</a></li>
 					<li><a href>About</a></li>
@@ -45,18 +45,18 @@
 		<div class="page-header">
 			<div class="row-fluid">
 				<blockquote>
-					<h2>TCM Inference Search</h2>
-					<small>Inference information search base on TCM</small>
+					<h2>BIO Inference Search</h2>
+					<small>Inference information search based on BIO</small>
 				</blockquote>
 			</div>
 		</div>
 		<div>
 			<div class="form-horizontal">
 				<div class="control-group">
-					<label class="control-label">TCM</label>
+					<label class="control-label">BIO</label>
 					<div class="controls">
-						<input type="text" id="tcm-keyword" placeholder="Ginkgo biloba, Curcuma longa..." value="Ginkgo biloba"/>
-						<button class="btn" id="tcm-search">Search</button>
+						<input type="text" id="bio-keyword" placeholder="Succinic acid, Glibenclamide..." value="Glibenclamide"/>
+						<button class="btn" id="bio-search">Search</button>
 						<span class="help-inline" id="total-or-fuzzytip">
 						</span>
 					</div>
@@ -80,26 +80,20 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th>Tcm Name</th>
-								<th>Disease Name</th>
-								<th>Disease ID</th>
+								<th>Drug Name</th>
 								<th>Drug ID</th>
-								<th>Target ID</th>
-								<th>Protein Accession</th>
-								<th>Gene ID</th>
-								<th>Gene Product</th>
+								<th>Disease ID</th>
+								<th>Disease Name</th>
+								<th>TCM Name</th>
 							</tr>
 						</thead>
 						<tbody id="tab1-table">
 							<tr class="hide" id="tab1-table-sample-row">
-								<td class="tcm-name">x</td>
-								<td class="disease-name">x</td>
+								<td class="drug-name">x</td>
+								<td class="drug-id">x</td>
 								<td class="disease-ID">x</td>
-								<td class="drud-ID">x</td>
-								<td class="target-ID">x</td>
-								<td class="protein-acce">x</td>
-								<td class="gene-ID">x</td>
-								<td class="gene-prod">x</td>
+								<td class="disease-name">x</td>
+								<td class="tcm-name">x</td>
 							</tr>
 						</tbody>
 					</table>
@@ -112,33 +106,27 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th>Tcm Name</th>
-								<th>Disease Name</th>
-								<th>Disease ID</th>
+								<th>Drug Name</th>
 								<th>Drug ID</th>
-								<th>Target ID</th>
-								<th>Protein Accession</th>
-								<th>Gene ID</th>
-								<th>Gene Product</th>
+								<th>Disease ID</th>
+								<th>Disease Name</th>
+								<th>TCM Name</th>
 							</tr>
 						</thead>
 						<tbody id="tab2-table">
 							<tr class="hide" id="tab2-table-sample-row">
-								<td class="tcm-name">x</td>
-								<td class="disease-name">x</td>
+								<td class="drug-name">x</td>
+								<td class="drug-id">x</td>
 								<td class="disease-ID">x</td>
-								<td class="drud-ID">x</td>
-								<td class="target-ID">x</td>
-								<td class="protein-acce">x</td>
-								<td class="gene-ID">x</td>
-								<td class="gene-prod">x</td>
+								<td class="disease-name">x</td>
+								<td class="tcm-name">x</td>
 							</tr>
 						</tbody>
 					</table>
 					<div class="pagination">
 					</div>
 				</div>
-				<div class="tab-pane" id="tab3">
+				<!-- <div class="tab-pane" id="tab3">
 					<div id="visual-div" style="height:800px"></div>
 					<div class="row">
 						<div class="span2">
@@ -152,7 +140,7 @@
 							<button class="btn" id="vgo">GO</button>
 						</div>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</body>
