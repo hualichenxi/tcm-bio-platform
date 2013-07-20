@@ -82,6 +82,6 @@ var ontologysearch = {
 			+ '<td>' + itemnum + '</td>'
 			+ '<td>' + time + '</td>'
 			+ '<td>' + description + '</td>'
-			'</tr>';
+			+ '</tr>';
 	}
-}
+};
