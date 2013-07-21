@@ -608,6 +608,6 @@ var termsearch = {
 		}
 		var resourceArray = resource.split("/");
 		return resourceArray[resourceArray.length-1];
-	},
+	}
 	
-}
+};
